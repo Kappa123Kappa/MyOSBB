@@ -1,0 +1,85 @@
+﻿@model MyOSBB.Models.User
+@{
+
+}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>@ViewBag.Title - Моє ОСББ</title>
+	@Styles.Render("~/Content/css")
+	@Scripts.Render("~/bundles/modernizr")
+
+	<script src="https://js.pusher.com/4.1/pusher.min.js"></script>
+
+	<link href="~/Content/css/bootstrap.min.css" rel="stylesheet" />
+
+	<!-- Animation library for notifications   -->
+	<link href="~/Content/css/animate.min.css" rel="stylesheet" />
+	<!--  Paper Dashboard core CSS    -->
+	<link href="~/Content/css/paper-dashboard.css" rel="stylesheet" />
+	<link href="~/Content/css/paper-dashboard2.css" rel="stylesheet" />
+	<link href="~/Content/css/index.css" rel="stylesheet" />
+	<link href="~/Content/css/registration.css" rel="stylesheet" />
+
+
+	<!--  CSS for Demo Purpose, don't include it in your project     -->
+	<link href="~/Content/css/demo.css" rel="stylesheet" />
+	<link href="~/Content/css/simplebox.css" rel="stylesheet" />
+	
+
+	<!--  Fonts and icons     -->
+	<link href="http://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Muli:400,300' rel='stylesheet' type='text/css'>
+	<link href="~/Content/css/themify-icons.css" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Comfortaa" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet">
+</head>
+<body style="padding-top: 0px; padding-bottom: 0px;">
+    <div class="navbar navbar-inverse navbar-fixed-top" style="background-color: #ffffff; width: 90%; display:
+    block; margin: auto; border-radius: 0px 0px 10px 10px; box-shadow: 0px 0px 16px -4px rgba(0,0,0,.85);">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Моє ОСББ", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Головна", "Index", "Home")</li>
+                    @if (Request.IsAuthenticated == false)
+                    {
+                        <li>@Html.ActionLink("Вхід", "Login", "Account")</li>
+                        <li>@Html.ActionLink("Реєстрація", "Registration", "Account")</li>
+                    }
+                    @if (Request.IsAuthenticated == true)
+                    {
+                        <li><p style="line-height: 1.42857; margin: 15px 0px; padding: 10px 15px; font-family: 'Comfortaa', cursive; font-size: 10pt;
+                            text-align: center;">Ви увійшли як <span style="color: #f5593d;">@Html.ActionLink(@Model.Login, "Main", "Main")</span></p></li>
+                        <li></li>
+                    }
+					<li>@Html.ActionLink("Про розробників", "About", "Home")</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+
+        <div>
+            <footer style="position: relative; display: block; margin: auto; bottom: 0px;">
+                <p style="font-family: 'Comfortaa', cursive; display:block; margin:auto;">&copy; @DateTime.Now.Year - Моє ОСББ</p>
+            </footer>
+        </div>
+
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

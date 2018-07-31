@@ -1,0 +1,553 @@
+﻿@model List<MyOSBB.Models.OSBB>
+@{
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+    ViewBag.Title = "Статистика";
+}
+
+<div class="wrapper">
+    <div class="sidebar" data-background-color="white" data-active-color="danger">
+        <div class="sidebar-wrapper">
+            <div class="logo">
+                <a href="http://www.creative-tim.com" class="simple-text">
+                    Моє ОСББ
+                </a>
+            </div>
+
+            <ul class="nav">
+                @foreach (var item in ViewBag.PageItemsList)
+                {
+                    if (item.Action == "MyOSBBSettings" && ViewBag.User.Id == ViewBag.SelectedOSBB.IdHead)
+                    {
+                        <li class="@item.Active">
+                            <a href='@Url.Action(item.Action, "Main", new  { id = ViewBag.SelectedOSBB.Id })'>
+                                <i class="@item.IClass"></i>
+                                <p>@item.MenuItem</p>
+                            </a>
+                        </li>
+                    }
+                    if (item.Action == "MyOSBBSettings" && ViewBag.User.Id != ViewBag.SelectedOSBB.IdHead)
+                    {
+                        continue;
+                    }
+                    if (item.Action != "MyOSBBSettings")
+                    {
+                        <li class="@item.Active">
+                            <a href='@Url.Action(item.Action, "Main", new  { id = ViewBag.SelectedOSBB.Id })'>
+                                <i class="@item.IClass"></i>
+                                <p>@item.MenuItem</p>
+                            </a>
+                        </li>
+                    }
+
+                }
+            </ul>
+        </div>
+    </div>
+
+    <div class="main-panel">
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar bar1"></span>
+                        <span class="icon-bar bar2"></span>
+                        <span class="icon-bar bar3"></span>
+                    </button>
+                    <a class="navbar-brand" href='@Url.Action("Main", "Main")'>Головна</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <div class="dropdown" style="top: 3px;">
+                                @if (Model.Count == 0)
+                                {
+                                    <a href="#" class="btn dropdown-toggle-danger btn-primary btn-danger disabled" data-toggle="dropdown" style="border-radius: 5px;">
+                                        Відсутні ОСББ
+                                        <b class="caret"></b>
+                                    </a>
+                                }
+                                @if (Model.Count != 0)
+                                {
+                                    <a href="#" class="btn dropdown-toggle-success btn-primary btn-success" data-toggle="dropdown" style="border-radius: 5px;">
+                                        @ViewBag.SelectedOSBB.Name
+                                        <b class="caret"></b>
+                                    </a>
+                                    <ul id="osbbList" class="dropdown-menu" style="position: absolute; display:  block; right: 48px; top: 46px;">
+                                        @foreach (var item in @Model)
+                                        {
+                                            <li><a href='@Url.Action("Statistic", "Main", new { id = item.Id })'>@item.Name</a></li>
+                                        }
+                                    </ul>
+                                }
+                                <button class="btn btn-success" style="margin: 15px 3px; font-size: 14px; padding: 7px 6px; border-radius: 7px;"
+                                        onclick="location.href='@Url.Action("MyOSBBAdd", "Main")'">
+                                    <span class="ti-plus"></span>
+                                </button>
+
+                            </div>
+                        </li>
+                        <li>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="ti-panel"></i>
+                                <p>Статистика</p>
+                            </a>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="ti-bell"></i>
+                                <p class="notification">5</p>
+                                <p>Новини</p>
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">Notification 1</a></li>
+                                <li><a href="#">Notification 2</a></li>
+                                <li><a href="#">Notification 3</a></li>
+                                <li><a href="#">Notification 4</a></li>
+                                <li><a href="#">Another notification</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <p class="loginAS"><span style="color: #9A9A9A">Ви увішли як </span><span style="color: #f5593d">@ViewBag.User.Login</span></p>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("LogOff")">
+                                <i class="ti-lock"></i>
+                                <p>Вийти</p>
+                            </a>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </nav>
+        <div class="content">
+            <div class="container-fluid">
+                @for (int t = 0; t < Enumerable.Count(@ViewBag.AccountTypeServices); t++)
+				{
+					List<string> borderColors = new List<string>() {
+								"rgba(0, 255, 0, 0, 1)",
+								"rgba(0, 0, 255, 1)",
+								"rgba(0, 255, 255, 1)",
+								"rgba(255, 69, 0, 1)",
+								"rgba(139,69,19, 1)",
+								"rgba(192, 192, 192, 1)",
+								"rgba(255, 255, 0, 1)",
+								"rgba(255, 127, 80,  1)",
+								"rgba(0, 128, 0, 1)",
+								"rgba(240, 230, 140, 1)"
+					};
+
+					List<string> backgroundColors = new List<string>() {
+								"rgba(0, 255, 0, 0, 0.2)",
+								"rgba(0, 0, 255, 0.2)",
+								"rgba(0, 255, 255, 0.2)",
+								"rgba(255, 69, 0, 0.2)",
+								"rgba(139,69,19, 0.2)",
+								"rgba(192, 192, 192, 0.2)",
+								"rgba(255, 255, 0, 0.2)",
+								"rgba(255, 127, 80,  0.2)",
+								"rgba(0, 128, 0, 0.2)",
+								"rgba(240, 230, 140, 0.2)"
+					};
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="header">
+                                    <h4 class="title">Витрати на комунальні послуги у порівняні з іншими мешканцями вашого ОСББ (@ViewBag.AccountTypeServices[t].Name)</h4>
+                                </div>
+                                <div class="content" style="font-family: 'Comfortaa', cursive;">
+                                    <canvas id='lineW-@t' width="400" height="70%"></canvas>
+
+									<script type="text/javascript">
+                                    var arrayOSBB = new Array();
+                                    var arrayUser = new Array();
+									var i;
+									var j;
+                                    var k;
+									var borderColors = [
+												"rgba(122, 194, 154, 1)",
+												"rgba(245, 187, 69, 1)",
+												"rgba(0, 255, 255, 1)",
+												"rgba(255, 69, 0, 1)",
+												"rgba(139,69,19, 1)",
+												"rgba(192, 192, 192, 1)",
+												"rgba(255, 255, 0, 1)",
+												"rgba(255, 127, 80,  1)",
+												"rgba(0, 128, 0, 1)",
+												"rgba(240, 230, 140, 1)"
+									];
+									var backgroundColors = [
+												"rgba(122, 194, 154, 0.2)",
+												"rgba(245, 187, 69, 0.2)",
+												"rgba(0, 255, 255, 0.2)",
+												"rgba(255, 69, 0, 0.2)",
+												"rgba(139,69,19, 0.2)",
+												"rgba(192, 192, 192, 0.2)",
+												"rgba(255, 255, 0, 0.2)",
+												"rgba(255, 127, 80,  0.2)",
+												"rgba(0, 128, 0, 0.2)",
+												"rgba(240, 230, 140, 0.2)"
+									];
+									var step = @t;
+                                    @{
+
+                                        var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+                                        var statisticOSBBChartModelJson = jss.Serialize(@ViewBag.StatisticChartModel);
+                                        var statisticUserChartModelJson = jss.Serialize(@ViewBag.UserPaidCommunalServices);
+                                        var id = @ViewBag.IdTypeServicesList[t];
+                                    }
+                                    var statisticOSBBChartModel = JSON.parse('@Html.Raw(statisticOSBBChartModelJson)');
+                                    for (i = 0; i < statisticOSBBChartModel.length; i++) {
+                                        if (statisticOSBBChartModel[i].IdTypeServices == @ViewBag.IdTypeServicesList[t]) {
+                                            var water = statisticOSBBChartModel[i];
+                                            arrayOSBB.push(water.AverageSumService);
+                                        }
+                                    }
+                                    console.log("OSBB: " + arrayOSBB);
+                                    var MONTHS = ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'];
+                                        var ctx = document.getElementById('lineW-@t');
+                                        var m = new Chart(ctx, {
+                                            type: 'line',
+                                            data: {
+                                                labels: MONTHS,
+                                                datasets: [
+                                                    {
+                                                        label: 'ОСББ',
+                                                        fill: false,
+                                                        backgroundColor: 'rgba(245, 89, 61, 0.2)',
+                                                        borderColor: 'rgba(245, 89, 61, 1)',
+                                                        borderWidth: 1,
+                                                        data: arrayOSBB
+                                                    }]
+                                            },
+                                            options: {
+                                                responsive: true,
+                                                title: {
+                                                    display: true,
+                                                    text: '1'
+                                                },
+                                                tooltips: {
+                                                    mode: 'index',
+                                                    intersect: false,
+                                                },
+                                                hover: {
+                                                    mode: 'nearest',
+                                                    intersect: true
+                                                },
+                                                scales: {
+                                                    xAxes: [{
+                                                        display: true,
+                                                        scaleLabel: {
+                                                            display: true,
+                                                            labelString: 'Місяці'
+                                                        }
+                                                    }],
+                                                    yAxes: [{
+                                                        display: true,
+                                                        scaleLabel: {
+                                                            display: true,
+                                                            labelString: 'Значення у ГРН'
+                                                        }
+                                                    }]
+                                                }
+                                            }
+                                        })
+                                    @*var @t =*@
+                                        var statisticUserChartModel = JSON.parse('@Html.Raw(statisticUserChartModelJson)');
+
+
+										    for (i = 0; i < statisticUserChartModel.length; i++) {
+
+											    var tempArrayIdTypeServices = statisticUserChartModel[i];
+											    if (tempArrayIdTypeServices == null) {
+												    arrayUser.push(0);
+											    }
+											    for (j = 0; j < tempArrayIdTypeServices.length; j++) {
+
+												    var tempIdTypeServices = tempArrayIdTypeServices[j];
+
+												    if (tempIdTypeServices.IdTypeServices == @ViewBag.AccountTypeServices[t].Id) {
+
+													    var waterSum = tempIdTypeServices.Sum;
+
+													    arrayUser.push(waterSum);
+												    }
+											    }
+											    for (var k = statisticUserChartModel.length; k < 12; k++) {
+												    arrayUser.push(0);
+                                                }
+
+                                                addData(m, "Ви (квартира № " + tempIdTypeServices.ApartmentNumber + ")", arrayUser, i)
+											    arrayUser = new Array();
+                                            }
+
+									$(document).ready(function () {
+
+
+									});
+
+                                    window.onload = function () {
+                                        var ctx = document.getElementById('canvas').getContext('2d');
+										window.myLine = new Chart(ctx, config);
+									};
+
+										function addData(chart, label, dataV, i) {
+										var backgroundColor = 0;
+										var borderColor = 0;
+										var newDataset = 0
+										if (i > 9) {
+											var color = getRandomRgb();
+											newDataset = {
+												label: label,
+												backgroundColor: color + 0.2 + ')',
+												borderColor: color + 1 + ')',
+												data: dataV,
+												borderWidth: 1,
+												fill: false
+											}
+										}
+										else {
+											backgroundColor = backgroundColors[i],
+											borderColor = borderColors[i],
+											newDataset = {
+												label: label,
+												backgroundColor: backgroundColor,
+												borderColor: borderColor,
+												data: dataV,
+												borderWidth: 1,
+												fill: false
+											}
+										}
+
+										chart.data.datasets.push(newDataset);
+                                        chart.update();
+                                        arrayUser = new Array();
+									};
+
+									function getRandomRgb() {
+										var num = Math.round(0xffffff * Math.random());
+										var r = num >> 16;
+										var g = num >> 8 & 255;
+										var b = num & 255;
+										return 'rgba(' + r + ', ' + g + ', ' + b + ', ';
+									}
+
+									</script>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        @*<div class="col-lg-6">
+                                <div class="card">
+                                    <div class="header">
+                                        <h4 class="title">Витрати на комунальні послуги у порівняні з іншими ОСББ</h4>
+                                    </div>
+                                    <div class="content" style="font-family: 'Comfortaa', cursive;">
+                                        <canvas id="lineW2" width="400" height="300"></canvas>
+                                        <script type="text/javascript">
+                                        var arrayOSBB = new Array();
+                                        var arrayUser = new Array();
+                                        var i;
+                                        @{
+                                            var jss2 = new System.Web.Script.Serialization.JavaScriptSerializer();
+                                            var statisticOSBBChartModelJson2 = jss2.Serialize(@ViewBag.StatisticChartModel);
+                                            var statisticUserChartModelJson2 = jss2.Serialize(@ViewBag.UserPaidCommunalServices);
+                                        }
+                                        var statisticOSBBChartModel = JSON.parse('@Html.Raw(statisticOSBBChartModelJson2)');
+                                        for (i = 0; i < statisticOSBBChartModel.length; i++) {
+                                            if (statisticOSBBChartModel[i].IdTypeServices == @ViewBag.IdTypeServicesList[t]) {
+                                                var water = statisticOSBBChartModel[i];
+                                                arrayOSBB.push(water.AverageSumService);
+                                            }
+                                        }
+
+                                        var statisticUserChartModel = JSON.parse('@Html.Raw(statisticUserChartModelJson2)');
+                                        for (i = 0; i < statisticUserChartModel.length; i++) {
+                                            if (statisticUserChartModel[i].IdTypeServices == 2 && statisticUserChartModel.ApartmentNumber == 1) {
+                                                var water = statisticUserChartModel[i];
+                                                if (water.Date.month == i + 1) {
+                                                    arrayUser.push(water.Sum);
+                                                }
+
+                                            }
+                                        }
+                                        console.log(arrayOSBB);
+                                        var MONTHS = ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'];
+                                        var ctx = document.getElementById("lineW2");
+                                        var myChart2 = new Chart(ctx, {
+
+                                            type: 'line',
+                                            data: {
+                                                labels: MONTHS,
+                                                datasets: [{
+                                                    label: 'Ви',
+                                                     backgroundColor: [
+                                                         'rgba(104, 179, 200, 0.2)',
+                                                         'rgba(245, 89, 61, 0.2)',
+                                                         'rgba(255, 206, 86, 0.2)'
+                                                     ],
+                                                     borderColor: [
+                                                          'rgba(104, 179, 200, 1)',
+                                                          'rgba(245, 89, 61, 1)',
+                                                          'rgba(255, 206, 86, 1)'
+                                                     ],
+                                                    borderWidth: 1,
+                                                    //data: arrayUser,
+                                                    fill: false,
+                                                }, {
+                                                    label: 'ОСББ',
+                                                    fill: false,
+                                                        backgroundColor: [
+                                                            'rgba(245, 89, 61, 0.2)',
+                                                            'rgba(104, 179, 200, 0.2)',
+                                                            'rgba(255, 206, 86, 0.2)'
+                                                        ],
+                                                        borderColor: [
+                                                            'rgba(245, 89, 61, 1)',
+                                                            'rgba(104, 179, 200, 1)',
+                                                            'rgba(255, 206, 86, 1)'
+                                                        ],
+                                                        borderWidth: 1,
+                                                        data: arrayOSBB
+                                                }]
+                                            },
+                                            options: {
+                                                responsive: true,
+                                                title: {
+                                                    display: true,
+                                                    text: 'Chart.js Line Chart'
+                                                },
+                                                tooltips: {
+                                                    mode: 'index',
+                                                    intersect: false,
+                                                },
+                                                hover: {
+                                                    mode: 'nearest',
+                                                    intersect: true
+                                                },
+                                                scales: {
+                                                    xAxes: [{
+                                                        display: true,
+                                                        scaleLabel: {
+                                                            display: true,
+                                                            labelString: 'Month'
+                                                        }
+                                                    }],
+                                                    yAxes: [{
+                                                        display: true,
+                                                        scaleLabel: {
+                                                            display: true,
+                                                            labelString: 'Value'
+                                                        }
+                                                    }]
+                                                }
+                                            }
+                                         });
+                                         $(document).ready(function () {
+                                            var statisticUserChartModel = JSON.parse('@Html.Raw(statisticUserChartModelJson)');
+
+                                            for (i = 0; i < statisticUserChartModel.length; i++) {
+
+                                                var tempArrayIdTypeServices = statisticUserChartModel[i];
+                                                if (tempArrayIdTypeServices == null) {
+                                                    arrayUser.push(0);
+                                                }
+                                                for (j = 0; j < tempArrayIdTypeServices.length; j++) {
+
+                                                    var tempIdTypeServices = tempArrayIdTypeServices[j];
+
+                                                    if (tempIdTypeServices.IdTypeServices == 2) {
+
+                                                        var waterSum = tempIdTypeServices.Sum;
+
+                                                        arrayUser.push(waterSum);
+                                                    }
+                                                }
+                                                for (var k = statisticUserChartModel.length; k < 12; k++) {
+                                                    arrayUser.push(0);
+                                                }
+                                                addData(myChart2, "Ви (квартира № " + tempIdTypeServices.ApartmentNumber + ")", arrayUser)
+                                                console.log("User: " + arrayUser);
+                                                arrayUser = new Array();
+                                            }
+
+                                         });
+                                         window.onload = function () {
+                                                var ctx = document.getElementById('canvas').getContext('2d');
+                                                window.myLine = new Chart(ctx, config);
+                                         };
+
+                                         function addData(chart, label, dataV) {
+                                                var color = getRandomRgb();
+                                                var newDataset = {
+                                                    label: label,
+                                                    backgroundColor: color + 0.2 + ')',
+                                                    borderColor: color + 1 + ')',
+                                                    data: dataV,
+                                                    borderWidth: 1,
+                                                    fill: false
+                                                }
+                                                chart.data.datasets.push(newDataset);
+                                                chart.update();
+                                         };
+
+                                         function getRandomRgb() {
+                                                var num = Math.round(0xffffff * Math.random());
+                                                var r = num >> 16;
+                                                var g = num >> 8 & 255;
+                                                var b = num & 255;
+                                                return 'rgba(' + r + ', ' + g + ', ' + b + ', ';
+                                         }
+                                      </script>
+                                    </div>
+                                </div>
+                            </div>*@
+                    </div>
+                }
+
+                <div class="row">
+
+                </div>
+                <div class="row">
+
+                </div>
+                <div class="row">
+
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+            <div class="container-fluid">
+                <nav class="pull-left">
+                    <ul>
+
+                        <li>
+                            <a href="https://vntu.edu.ua/">
+                                ВНТУ
+                            </a>
+                        </li>
+                        <li>
+                            <a href="http://fcsa.vntu.edu.ua/">
+                                ФКСА
+                            </a>
+                        </li>
+                        <li>
+                            <a href="http://www.creative-tim.com/license">
+                                Licenses
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                <div class="copyright pull-right">
+                    &copy;
+                    <script>document.write(new Date().getFullYear())</script>, зроблено з  <i class="fa fa-heart heart"></i> від Плисака Владислава
+                    <a href="https://www.facebook.com/profile.php?id=100011492971959"><i class="fa fa-facebook facebook"></i></a>
+                    <a href="https://plus.google.com/u/0/111604599843653094663"><i class="fa fa-google-plus google-plus" style="color: #EB5E28;"></i></a>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>

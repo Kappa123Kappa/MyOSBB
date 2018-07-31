@@ -1,0 +1,94 @@
+﻿@model MyOSBB.Models.Registration
+@{
+	ViewData["Title"] = "Зміна паролю";
+}
+
+<div class="content" style="margin-top: 100px; height: max-content;">
+    <div class="formReg">
+        <h2 class="text-center" style="margin: 0 15px;">Реєстрація</h2>
+        @using (Html.BeginForm("Registration", "Account", FormMethod.Post, new { @class = "register-form", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-group">
+				<label for="login">Логін: @if (ViewBag.LoginError != null) {<span style="color: #dd0330;">@ViewBag.LoginError</span>}</label>
+                @Html.EditorFor(model => model.Login, new { htmlAttributes = new { @class = "input, form-control", id = "login", name = "login",
+                    required = "required", type = "text", placeholder = "Логін" } })
+            </div>
+            <div class="requirements">
+                    @Html.ValidationMessageFor(model => model.Login)
+            </div>
+            <div class="form-group">
+                <label for="password">Пароль:</label>
+                @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "input, form-control", id = "password", name = "password",
+                    required = "required", type = "password", placeholder = "Пароль" } })
+            </div>
+             <div class="requirements">
+                    @Html.ValidationMessageFor(model => model.Password)
+            </div>
+            <div class="form-group">
+				<label for="matchPassword">Повторіть пароль: <span style="color: #dd0330;">@Html.ValidationMessageFor(model => model.PasswordConfirm)</span></label>
+                 @Html.EditorFor(model => model.PasswordConfirm, new { htmlAttributes = new { @class = "input, form-control", id = "matchPassword", name = "passmatchPasswordword",
+                    required = "required", type = "password", placeholder = "Повторіть пароль" } })
+            </div>
+             @*<div class="requirements">
+                    @Html.ValidationMessageFor(model => model.PasswordConfirm)
+            </div>*@
+            <div class="form-group">
+                <label for="firstName">Ім'я:</label>
+                @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "input, form-control", id = "firstName", name = "firstName",
+                    required = "required", type = "text", placeholder = "Ім'я" } })
+            </div>
+             <div class="requirements">
+                    @Html.ValidationMessageFor(model => model.FirstName)
+            </div>
+            <div class="form-group">
+                <label for="lastName">Прізвище:</label>
+                @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "input, form-control", id = "lastName", name = "lastName",
+                    required = "required", type = "text", placeholder = "Прізвище" } })
+            </div>
+             <div class="requirements">
+                    @Html.ValidationMessageFor(model => model.LastName)
+            </div>
+            <div class="form-group">
+                <label for="middleName">По батькові:</label>
+                @Html.EditorFor(model => model.MiddleName, new { htmlAttributes = new { @class = "input, form-control", id = "middleName", name = "middleName",
+                    required = "required", type = "text", placeholder = "По батькові" } })
+            </div>
+             <div class="requirements">
+                    @Html.ValidationMessageFor(model => model.MiddleName)
+            </div>
+            <div class="form-group">
+                <label for="email">Email: @if (ViewBag.EmailError != null) {<span style="color: #dd0330;">@ViewBag.EmailError</span>}</label>
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "input, form-control", id = "email", name = "email",
+                    required = "required", type = "text", placeholder = "Email" } })
+            </div>
+             <div class="requirements">
+                    @Html.ValidationMessageFor(model => model.Email)
+            </div>
+            <div class="form-group">
+                <label for="phone">Телефон:</label>
+                @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @class = "input, form-control", id = "phone", name = "phone",
+                    required = "required", type = "text", placeholder = "Телефон" } })
+            </div>
+             <div class="requirements">
+                    @Html.ValidationMessageFor(model => model.Phone)
+            </div>
+            <div class="btnDiv">
+                <button class="btn btn-success btn-block" type="submit">Зареєструватись</button>
+            </div>
+        }
+        <div class="btnDiv">
+            <a style="margin-left:10px; text-decoration: none;" href="javascript:history.back()" '>
+                <button class="btn btn-danger btn-block" style="text-decoration: none;">Відмінити</button>
+            </a>
+        </div>
+        <hr />
+        <div class="btnDiv">
+            <a style="margin-left:10px; text-decoration: none;" href='@Url.Action("Login")'>
+                <button class="btn btn-info btn-block" style="text-decoration: none;">Маєш акаунт?</button>
+            </a>
+        </div>
+
+    </div>
+</div>

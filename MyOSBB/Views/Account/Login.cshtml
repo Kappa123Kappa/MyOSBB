@@ -1,0 +1,80 @@
+﻿@model MyOSBB.Models.Login
+@{
+    ViewData["Title"] = "Вхід";
+}
+
+
+<content style="position: relative; top: 16%; display: block;">
+    <div class="descriptionBackground">
+        <div class="logo">
+        </div>
+        <div class="description">
+            <p>Онлайн система управління ОСББ</p>
+            <hr style="background-color: #58595b; size: 5px;" />
+            <p>Увійти</p>
+            @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @class = "login-form", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="Login">
+                    <div class="row">
+                        <div class="input-group">
+
+                            @*<input type="text" class="form-control" placeholder="Логін" aria-describedby="basic-addon1"
+                                   style="font-family: 'Comfortaa', cursive; background-color: #fff;">*@
+                             @Html.EditorFor(model => model.UserLogin, new { htmlAttributes = new { @class = "input, form-control", id = "login", name = "login",
+                            required = "required", type = "text", placeholder = "Логін", style = "font-family: 'Comfortaa', cursive; background-color: #fff;" } })
+                            <span class="input-group-addon"><i class="fa fa-group"></i></span>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-group">
+                            @*<input type="password" class="form-control" placeholder="Пароль" aria-describedby="basic-addon1"
+                                   style="font-family: 'Comfortaa', cursive; background-color: #fff;">*@
+                             @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "input, form-control", id = "password", name = "password",
+                            required = "required", type = "password", placeholder = "Пароль", style = "font-family: 'Comfortaa', cursive; background-color: #fff;" } })
+                            <span class="input-group-addon"><i class="fa fa-key"></i></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="checkbox">
+                            @*<input id="checkbox1" type="checkbox" name="checkbox1" value="">*@
+                            <input data-val="true" data-val-required="The RememberMe field is required." id="checkbox1" name="checkbox1" type="checkbox" value="true" checked>
+                            @*@Html.CheckBoxFor(model => model.IsRemembered, new { htmlAttributes = new { @class = "input", id = "checkbox1", name = "checkbox1",
+                                type = "checkbox" } })*@
+                            <label for="checkbox1" style="font-family: 'Comfortaa', cursive;">
+                                Запам'ятати мене
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <button type="submit" class="btn btn-success" style="width: 100%; font-family: 'Comfortaa', cursive;">Увійти</button>
+                    </div>
+                    <a href='@Url.Action("ForgotPassword")' style="margin: auto;display: block;top: 5px;position: relative;">Забув пароль?</a>
+
+                    <hr style="margin-top: 20px;margin-bottom: 20px;">
+                    <div class="row">
+                        <!--<a routerLink="/registration" style="margin: auto;display: block;top: 5px;position: relative;">
+                        <button type="button" class="btn btn-info btn-block" style="width: 100%; font-family: 'Comfortaa', cursive;" (click)="open(content)">Реєстрація</button>
+                        </a>-->
+                        <a href='@Url.Action("Registration")' style="text-decoration:none">
+                            <button type="button" class="btn btn-info btn-block" style="width: 100%; font-family: 'Comfortaa', cursive;">
+                                Реєстрація
+                            </button>
+                        </a>
+                    </div>
+					
+                    <br />
+                </div>
+            }
+			@if (@ViewBag.Error != null)
+			{
+				<div class="row alert alert-warning" style="background-color: #dd035614; color: #dd0330; font-size: 15pt;  border: 1px solid #dd0330;">
+						@ViewBag.Error
+						@*@Html.ValidationMessageFor(model => model.UserLogin)*@
+					</div>
+			}
+        </div>
+    </div>
+</content>
+

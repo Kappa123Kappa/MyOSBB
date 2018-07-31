@@ -1,0 +1,247 @@
+﻿@model List<MyOSBB.Models.OSBB>
+@{
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+    ViewBag.Title = "Ідеї";
+}
+
+<div class="wrapper">
+    <div class="sidebar" data-background-color="white" data-active-color="danger">
+        <div class="sidebar-wrapper">
+            <div class="logo">
+                <a href="http://www.creative-tim.com" class="simple-text">
+                    Моє ОСББ
+                </a>
+            </div>
+
+            <ul class="nav">
+                @foreach (var item in ViewBag.PageItemsList)
+                {
+                    if (item.Action == "MyOSBBSettings" && ViewBag.User.Id == ViewBag.SelectedOSBB.IdHead)
+                    {
+                        <li class="@item.Active">
+                            <a href='@Url.Action(item.Action, "Main", new  { id = ViewBag.SelectedOSBB.Id })'>
+                                <i class="@item.IClass"></i>
+                                <p>@item.MenuItem</p>
+                            </a>
+                        </li>
+                    }
+                    if (item.Action == "MyOSBBSettings" && ViewBag.User.Id != ViewBag.SelectedOSBB.IdHead)
+                    {
+                        continue;
+                    }
+                    if (item.Action != "MyOSBBSettings")
+                    {
+                        <li class="@item.Active">
+                            <a href='@Url.Action(item.Action, "Main", new  { id = ViewBag.SelectedOSBB.Id })'>
+                                <i class="@item.IClass"></i>
+                                <p>@item.MenuItem</p>
+                            </a>
+                        </li>
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+
+    <div class="main-panel">
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar bar1"></span>
+                        <span class="icon-bar bar2"></span>
+                        <span class="icon-bar bar3"></span>
+                    </button>
+                    <a class="navbar-brand" href='@Url.Action("News", "Main")'>Новини</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <div class="dropdown" style="top: 3px;">
+                                @if (Model.Count == 0)
+                                {
+                                    <a href="#" class="btn dropdown-toggle-danger btn-primary btn-danger disabled" data-toggle="dropdown" style="border-radius: 5px;">
+                                        Відсутні ОСББ
+                                        <b class="caret"></b>
+                                    </a>
+                                }
+                                @if (Model.Count != 0)
+                                {
+                                    <a href="#" class="btn dropdown-toggle-success btn-primary btn-success" data-toggle="dropdown" style="border-radius: 5px;">
+                                        @ViewBag.SelectedOSBB.Name
+                                        <b class="caret"></b>
+                                    </a>
+                                    <ul id="osbbList" class="dropdown-menu" style="position: absolute; display:  block; right: 48px; top: 46px;">
+                                        @foreach (var item in @Model)
+                                        {
+                                            <li><a href='@Url.Action("News", "Main", new { id = item.Id })'>@item.Name</a></li>
+                                        }
+                                    </ul>
+                                }
+                                <button class="btn btn-success" style="margin: 15px 3px; font-size: 14px; padding: 7px 6px; border-radius: 7px;"
+                                        onclick="location.href='@Url.Action("MyOSBBAdd", "Main")'">
+                                    <span class="ti-plus"></span>
+                                </button>
+
+                            </div>
+                        </li>
+                        <li>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="ti-panel"></i>
+                                <p>Статистика</p>
+                            </a>
+                        </li>
+                        @*<li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="ti-bell"></i>
+                                <p class="notification">5</p>
+                                <p>Новини</p>
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">Notification 1</a></li>
+                                <li><a href="#">Notification 2</a></li>
+                                <li><a href="#">Notification 3</a></li>
+                                <li><a href="#">Notification 4</a></li>
+                                <li><a href="#">Another notification</a></li>
+                            </ul>
+                        </li>*@
+                        <li>
+                            <p class="loginAS"><span style="color: #9A9A9A">Ви увішли як </span><span style="color: #f5593d">@ViewBag.User.Login</span></p>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("LogOff")">
+                                <i class="ti-lock"></i>
+                                <p>Вийти</p>
+                            </a>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </nav>
+        <div class="content">
+            <div class="container-fluid">
+                @if (ViewBag.User.Id == ViewBag.SelectedOSBB.IdHead)
+                {
+                    <div class="row" style="margin-bottom: 15px;">
+                        <div class="col-md-12">
+                            <div class="card border-dark mb-3" style="border-color: #343a40!important;margin-bottom: 1rem!important;">
+                                <div class="card-header" style="text-align: center; font-family: 'Comfortaa', cursive; font-size: 20pt; text-decoration: underline;
+                                border-radius: calc(.25rem - 1px) calc(.25rem - 1px) 0 0; padding: .75rem 1.25rem; margin-bottom: 0; background-color: #7AC29A; color: #ffffff;
+                                border-bottom: 1px solid rgba(0,0,0,.125); padding: 12px 20px 12px 20px; border-radius: 6px 6px 0px 0px;">
+                                    Додати новину
+                                </div>
+                                <div class="card-body text-dark" style="color: #343a40!important; padding: 20px;">
+                                    <div class="card-text">
+                                        <button class="btn btn-success" onclick="location.href='@Url.Action("NewAdd", "Main",
+                                                                                               new { selectedOSBBIdInDropDown = @ViewBag.SelectedOSBB.Id })'"
+                                                style="position: relative; top: 10px; width: 210px; display: block; margin: auto; font-size: 14px;">
+                                            <span class="ti-plus"></span>
+                                        </button>
+                                    </div>
+                                    <div class="content">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <div class="row" style="background-color: #f5593d45; padding-top: 10px; border-radius: 6px; margin: auto; margin: auto;
+                                            box-shadow: 0 2px 2px rgba(204, 197, 185, 0.5); background-color: #ffffff54;">
+                    <div class="card-columns" style="padding: 0 70px 0 70px;">
+                        @for (int i = 0; i < Enumerable.Count(ViewBag.News); i++)
+                        {
+                            string marginBottom = ".75rem";
+                            //if (Enumerable.Count(ViewBag.News) % 4 != 0)
+                            //{
+                            //    if (i == Enumerable.Count(ViewBag.News) - 3)
+                            //    {
+                            //        marginBottom = "46.75rem";
+                            //    }
+                            //    else
+                            //    {
+                            //        marginBottom = ".75rem";
+                            //    }
+
+                            //}
+                            //else
+                            //{
+                            //    marginBottom = ;
+                            //}
+                            <div class="card col-sm" style="max-width:  max-content; padding: 15px; display: inline-block; width: 100%; margin-bottom: @marginBottom">
+                                <img class="card-img-top" src="@ViewBag.News[i].PathToPhoto" alt="Card image cap" style="display:  block; margin:  auto;
+                                                    max-width: 100%; border-radius: 6px;">
+                                <div class="card-body">
+                                    <h5 class="card-title">@ViewBag.News[i].Title</h5>
+                                    <p class="card-text">
+                                        <button id="payOSBB" class="btn btn-success btnInTable btn-fill" style="margin-bottom: 5px; width: 100%;"
+                                                onclick="location.href='@Url.Action("New", "Main",
+                                                                           new { selectedOSBBIdInDropDown = @ViewBag.SelectedOSBB.Id,
+                                                                               selectedNews = @ViewBag.News[i].Id})'">
+                                            Детальніше
+                                        </button>
+                                        @if (ViewBag.News[i].Author ==
+                                            (ViewBag.User.LastName + " " + ViewBag.User.FirstName + " " + ViewBag.User.MiddleName).ToString())
+                                        {
+                                            <button id="payOSBB" class="btn btn-warning btnInTable" style="margin-bottom: 5px; width: 100%;"
+                                                    onclick="location.href='@Url.Action("NewEdit", "Main",
+                                                                           new { selectedOSBBIdInDropDown = @ViewBag.SelectedOSBB.Id,
+                                                                               selectedNews = @ViewBag.News[i].Id })'">
+                                                Редагувати
+                                            </button>
+                                            <button id="payOSBB" class="btn btn-danger btnInTable" style="margin-bottom: 5px; width: 100%;"
+                                                    onclick="location.href='@Url.Action("DeletetNew", "Main",
+                                                                           new { selectedOSBBIdInDropDown = @ViewBag.SelectedOSBB.Id,
+                                                                               selectedNews = @ViewBag.News[i].Id})'">
+                                                Видалити
+                                            </button>
+                                        }
+                                    </p>
+                                    <p class="card-text">
+                                        <small class="text-muted">
+                                            <span style="color: #f5593d;">Автор:</span> @ViewBag.News[i].Author
+                                            <br />
+                                            @ViewBag.News[i].Date
+                                        </small>
+                                    </p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+            <div class="container-fluid">
+                <nav class="pull-left">
+                    <ul>
+
+                        <li>
+                            <a href="https://vntu.edu.ua/">
+                                ВНТУ
+                            </a>
+                        </li>
+                        <li>
+                            <a href="http://fcsa.vntu.edu.ua/">
+                                ФКСА
+                            </a>
+                        </li>
+                        <li>
+                            <a href="http://www.creative-tim.com/license">
+                                Licenses
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                <div class="copyright pull-right">
+                    &copy;
+                    <script>document.write(new Date().getFullYear())</script>, зроблено з  <i class="fa fa-heart heart"></i> від Плисака Владислава
+                    <a href="https://www.facebook.com/profile.php?id=100011492971959"><i class="fa fa-facebook facebook"></i></a>
+                    <a href="https://plus.google.com/u/0/111604599843653094663"><i class="fa fa-google-plus google-plus" style="color: #EB5E28;"></i></a>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>

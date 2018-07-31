@@ -1,0 +1,80 @@
+﻿@using MyOSBB.Models
+@model ChatModel
+<div id="RefreshArea">
+    @{
+        Html.RenderPartial("History", Model);
+    }
+</div>
+
+@Ajax.ActionLink("ActionLink", "Chat2", new { user = "", logOn = "", logOff = "", chatMessage = "" },
+new AjaxOptions { UpdateTargetId = "RefreshArea", OnSuccess = "ChatOnSuccess", OnFailure = "ChatOnFailure" },
+new { @id = "ActionLink", @style = "visibility:hidden;" })
+
+
+
+<div id="inputForm">
+    <table>
+        <tr>
+            <td rowspan="2"><textarea id="txtMessage" rows="3"></textarea></td>
+            <td><button id="btnMessage" value="Отправить">Отправить</button></td>
+        </tr>
+        <tr>
+            <td><button id="btnLogOff" value="Выйти">Выйти</button></td>
+        </tr>
+    </table>
+</div>
+
+<script type="text/javascript">
+
+    function LoginOnSuccess(result) {
+
+        Scroll();
+        ShowLastRefresh();
+
+        //каждые пять секунд обновляем чат
+        setTimeout("Refresh();", 5000);
+
+        //отправка сообщений по нажатию Enter
+        $('#txtMessage').keydown(function (e) {
+            if (e.keyCode == 13) {
+                e.preventDefault();
+                $("#btnMessage").click();
+            }
+        });
+
+        //установка обработчика нажатия кнопки для отправки сообщений
+        $("#btnMessage").click(function () {
+            var text = $("#txtMessage").val();
+            if (text) {
+
+                //обращаемся к методу Index и передаем параметр "chatMessage"
+                var href = "/Home?user=" + encodeURIComponent($("#Username").text());
+                href = href + "&chatMessage=" + encodeURIComponent(text);
+                $("#ActionLink").attr("href", href).click();
+            }
+        });
+
+        // каждые пять секунд обновляем поле чата
+        function Refresh() {
+            var href = "/Home?user=" + encodeURIComponent($("#Username").text());
+
+            $("#ActionLink").attr("href", href).click();
+            setTimeout("Refresh();", 5000);
+        }
+
+        //скролл к низу окна
+        function Scroll() {
+            var win = $('#Messages');
+            var height = win[0].scrollHeight;
+            win.scrollTop(height);
+        }
+
+        //отображение времени последнего обновления чата
+        function ShowLastRefresh() {
+            var dt = new Date();
+            var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+            $("#LastRefresh").text("Последнее обновление было в " + time);
+        }
+
+
+</script>

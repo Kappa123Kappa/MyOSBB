@@ -1,0 +1,330 @@
+﻿
+
+body {
+	padding-top: 0px;
+	padding-bottom: 0px;
+	background-image: url(../../Content/images/background2.jpg);
+	background-repeat-y: no-repeat;
+	background-repeat-x: no-repeat;
+	background-attachment: fixed;
+	background-size: cover;
+}
+
+.body.modal-open, .modal-open .navbar-fixed-top, .modal-open .navbar-fixed-bottom {
+    margin-right: 0px;
+}
+
+.form-control {
+    background-color: #fff;
+    border: 1px solid;
+    border-color: #000000;
+}
+
+body.modal-open, .modal-open .navbar-fixed-top, .modal-open .navbar-fixed-bottom {
+	margin-right: 0px;
+}
+
+.main-panel > .content {
+	padding: 30px 15px;
+	min-height: calc(100% - 151px);
+}
+
+/*                   HEADER                          */
+.logo a {
+    font-family: 'Comfortaa', cursive;
+}
+
+.navbar-brand {
+    font-family: 'Comfortaa', cursive;
+}
+
+.loginAS {
+    line-height: 1.42857;
+    margin: 15px 0px;
+    padding: 10px 15px;
+    font-family: 'Comfortaa', cursive;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.navbar .navbar-nav > li > a p {
+    font-family: 'Comfortaa', cursive;
+}
+
+.dropdown-toggle-success:hover {
+    background-color: #7AC29A;
+    border-color: #7AC29A;
+}
+
+.dropdown-toggle-success:focus {
+    background-color: #7AC29A;
+    border-color: #7AC29A;
+}
+
+.dropdown-toggle-warning:hover {
+    background-color: #F3BB45;
+    border-color: #F3BB45;
+}
+
+.dropdown-toggle-warning:focus {
+    background-color: #F3BB45;
+    border-color: #F3BB45;
+}
+
+
+.open > .dropdown-toggle-success.btn-success:focus, .open > .dropdown-toggle-success.btn-success:hover {
+    color: #fff;
+    background-color: #7AC29A;
+    border-color: #7AC29A;
+}
+
+.open > .dropdown-toggle-warning.btn-success:focus, .open > .dropdown-toggle-warning.btn-warning:hover {
+    color: #fff;
+    background-color: #F3BB45;
+    border-color: #F3BB45;
+}
+
+/*////////////////////////////////////////////////////*/
+
+
+
+/*                   Sidebar                          */
+.sidebar:after, .sidebar:before, .sidebar[data-background-color="white"]:after,
+.sidebar[data-background-color="white"]:before, .off-canvas-sidebar:after,
+.off-canvas-sidebar:before, .off-canvas-sidebar[data-background-color="white"]:after,
+.off-canvas-sidebar[data-background-color="white"]:before {
+    height: 100vh;
+    background-color: #ffffffa6;
+}
+/*////////////////////////////////////////////////////*/
+
+
+
+/*                   Content                          */
+@media (max-width: 1525px) {
+	#osbbservices {
+		width: 75%;
+	}
+}
+
+.progress-bar {
+	background-color: #68B3C8;
+}
+
+.main-panel {
+    background-color: #ffffff00;
+}
+
+.title {
+    font-family: 'Comfortaa', cursive;
+}
+
+.card-user .author .title small {
+    color: #f5593d;
+    font-family: 'Comfortaa', cursive;
+}
+
+.card-user .author .title small:hover {
+     color: #f5593d;
+     font-family: 'Comfortaa', cursive;
+     text-decoration: underline;
+}    
+
+@media (min-width: 576px) {
+    .card-columns {
+        -webkit-column-count: 4;
+        -moz-column-count: 4;
+        column-count: 4;
+        -webkit-column-gap: 1.25rem;
+        -moz-column-gap: 1.25rem;
+        column-gap: 1.25rem;
+        orphans: 1;
+        widows: 1;
+    }
+}
+
+.col-lg-12 {
+    /*width: 100%;
+    height: 360px;
+    max-height: 360px;
+    margin-bottom: 30px;*/
+}
+
+.masonry {
+    display: flex;
+    flex-flow: row wrap;
+    margin-left: -8px; /* Adjustment for the gutter */
+    width: 100%;
+}
+
+.masonry-brick {
+    flex: auto;
+    height: 250px;
+    min-width: 150px;
+    margin: 0 8px 8px 0; /* Some gutter */
+}
+
+.masonry-brick {
+    &:nth-child(4n+1){
+        width: 250px;
+    }
+
+    &:nth-child(4n+2) {
+        width: 325px;
+    }
+
+    &:nth-child(4n+3) {
+        width: 180px;
+    }
+
+    &:nth-child(4n+4) {
+        width: 380px;
+    }
+}
+
+.card {
+    /*height: 100%;*/
+}
+
+.table > thead > tr > th {
+    border-bottom-width: 0;
+    font-size: 1.25em;
+    font-weight: 300;
+    text-align: center;
+}
+
+.table > thead:first-child > tr:first-child > th {
+    border-top: 0;
+    text-align: center;
+}
+
+.table > thead > tr {
+    padding: 12px;
+    vertical-align: middle;
+    text-align: center;
+    font-size: 10pt
+}
+
+@media (max-width: 1460px) {
+    .table-full-width {
+        font-size: 8pt;
+    }
+
+    #vote {
+        font-size: 8pt;
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+    .table > thead:first-child > tr:first-child > th {
+        font-size: 8pt;
+    }
+
+    .table-striped > tbody > tr > td {
+        font-size: 8pt;
+    }
+
+    #pie {
+        width: 170px;
+    }
+}
+
+@media (max-width: 1220px) {
+    #description{
+        display: none;
+    }
+}
+
+@media (max-width: 1150px) {
+    .table-full-width {
+        font-size: 8pt;
+    }
+
+    .btnInTable {
+        font-size: 10pt;
+    }
+
+    .table-full-width {
+        font-size: 8pt;
+    }
+
+    #vote {
+        font-size: 8pt;
+    }
+    .table-striped > tbody > tr > td {
+        font-size: 8pt;
+    }
+}
+
+@media (max-width: 1040px) {
+    .table-full-width {
+        font-size: 8pt;
+    }
+
+    .table-full-width {
+        font-size: 8pt;
+    }
+
+    #vote {
+        font-size: 8pt;
+    }
+
+    .btnInTable {
+        font-size: 8pt;
+    }
+
+    .table-striped > tbody > tr > td {
+        font-size: 8pt;
+    }
+
+    .table > thead > tr {
+        padding: 12px;
+        vertical-align: middle;
+        text-align: center;
+        font-size: 10pt;
+        font-size: 8pt;
+    }
+
+        .table > thead > tr > th {
+            font-size: 8pt;
+        }
+
+    .table > tbody > tr > td {
+        padding-left: 7px;
+        padding-right: 7px;
+    }
+
+        .table > tbody > tr > td > button {
+            font-size: 8pt;
+        }
+}
+
+.progress {
+    height: 20px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    background-color: #868686;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
+}
+
+/*////////////////////////////////////////////////////*/
+
+
+/*                   Modal                           */
+.modal-header .close {
+    margin-top: -21px;
+}
+/*////////////////////////////////////////////////////*/
+
+
+
+/*                   Footer                          */
+.footer nav ul a:not(.btn) {
+    font-family: 'Comfortaa', cursive;
+}
+
+footer {
+    background-color: #f4f3ef;
+}
+/*////////////////////////////////////////////////////*/

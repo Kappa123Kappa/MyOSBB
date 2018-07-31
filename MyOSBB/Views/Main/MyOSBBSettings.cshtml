@@ -1,0 +1,678 @@
+﻿@model MyOSBB.Models.OSBBSettingsModel
+@{
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+    ViewBag.Title = "Налаштування ОСББ";
+}
+
+<div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1" aria-hidden="true">
+    <div class="modal-dialog" role="document" style=" display:  block; margin:  auto; left:  0px; top: 25%;">
+        <div class="modal-content" style="font-family: 'Comfortaa', cursive;font-size: 15pt;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel1" style="text-align:center;">Додавання послуг</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @using (Html.BeginForm("UpdateAccountNumber", "Main", FormMethod.Post, new
+            {
+                @class = "register-form",
+                enctype = "multipart/form-data",
+                role = "form",
+                autocomplete = "off"
+            }))
+            {
+                <div class="modal-body">
+
+                    @Html.AntiForgeryToken()
+                    <div class="row" style="padding-left: 15px;">
+                        <div class="form-group">
+
+                            @Html.EditorFor(model => model.addOSBBAccountServiceModel.IdOSBB, new
+                            {
+                                htmlAttributes = new
+                                {
+                                    @class = "input form-control border-input",
+                                    required = "required",
+                                    type = "hidden",
+                                    @Value = @ViewBag.SelectedOSBB.Id
+                                }
+                            })
+                            <label>Назва послуги:</label>
+                            @Html.EditorFor(model => model.addOSBBAccountServiceModel.AccountTypeName, new
+                            {
+                                htmlAttributes = new
+                                {
+                                    @class = "input form-control border-input",
+                                    required = "required",
+                                    type = "text",
+                                    placeholder = "Назва послуги"
+                                }
+                            })
+                        </div>
+                    </div>
+                    <div class="row" style="padding-left: 15px;">
+                        <div class="form-group">
+                            <label>Рахунок послуги:</label>
+                            @Html.EditorFor(model => model.addOSBBAccountServiceModel.AccountNumber, new
+                            {
+                                htmlAttributes = new
+                                {
+                                    @class = "input form-control border-input",
+                                    required = "required",
+                                    type = "text",
+                                    placeholder = "Рахунок послуги"
+                                }
+                            })
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-info">Додати</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Відміна</button>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+    <div class="modal-dialog" role="document" style=" display:  block; margin:  auto; left:  0px; top: 25%;">
+        <div class="modal-content" style="font-family: 'Comfortaa', cursive;font-size: 15pt;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel2" style="text-align:center;">Ви точно хочете видалити послугу?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @using (Html.BeginForm("DeleteAccountNumber", "Main", FormMethod.Post, new
+            {
+                @class = "register-form",
+                enctype = "multipart/form-data",
+                role = "form",
+                autocomplete = "off"
+            }))
+            {
+                <div class="modal-body">
+                    @Html.EditorFor(model => model.osbbAccountService.Id, new
+                            {
+                                htmlAttributes = new
+                                {
+                                    @class = "input form-control border-input",
+                                    required = "required",
+                                    type = "hidden",
+                                    @id = "accountid"
+                                }
+                            })
+                    <div class="form-group">
+                        <label for="accountname" class="col-form-label">Назва послуги:</label>
+                        <input type="text" class="form-control" id="accountname" disabled style="background-color: #ffffff;">
+                    </div>
+                    <div class="form-group">
+                        <label for="accountnumber" class="col-form-label">Номер рахунку:</label>
+                        <input type="text" class="form-control" id="accountnumber" disabled style="background-color: #ffffff;" name="osbbAccountService.AccountNumber">
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger">Видалити</button>
+                    <button type="button" class="btn btn-info" data-dismiss="modal">Відміна</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@*<div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+        <div class="modal-dialog" role="document" style=" display:  block; margin:  auto; left:  0px; top: 25%;">
+            <div class="modal-content" style="font-family: 'Comfortaa', cursive;font-size: 15pt;">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel2" style="text-align:center;">Ви точно хочете видалити послугу?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                @using (Html.BeginForm("DeleteAccountNumber", "Main", FormMethod.Post, new
+                {
+                    @class = "register-form",
+                    enctype = "multipart/form-data",
+                    role = "form",
+                    autocomplete = "off"
+                }))
+                {
+                    <div class="modal-body">
+                        @Html.EditorFor(model => model.osbbAccountService.AccountNumber, new
+                                {
+                                    htmlAttributes = new
+                                    {
+                                        @class = "input form-control border-input",
+                                        required = "required",
+                                        type = "hidden",
+                                        @id = "accountid"
+                                    }
+                                })
+                        <div class="form-group">
+                            <label for="accountname" class="col-form-label">Назва послуги:</label>
+                            <input type="text" class="form-control" id="accountname" disabled style="background-color: #ffffff;">
+                        </div>
+                        <div class="form-group">
+                            <label for="accountnumber" class="col-form-label">Номер рахунку:</label>
+                            <input type="text" class="form-control" id="accountnumber" disabled style="background-color: #ffffff;" name="osbbAccountService.AccountNumber">
+                        </div>
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-danger">Видалити</button>
+                        <button type="button" class="btn btn-info" data-dismiss="modal">Відміна</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>*@
+
+<div class="wrapper">
+    <div class="sidebar" data-background-color="white" data-active-color="danger">
+        <div class="sidebar-wrapper">
+            <div class="logo">
+                <a href="http://www.creative-tim.com" class="simple-text">
+                    Моє ОСББ
+                </a>
+            </div>
+
+            <ul class="nav">
+                @foreach (var item in ViewBag.PageItemsList)
+                {
+                    if (item.Action == "MyOSBBSettings" && ViewBag.User.Id == ViewBag.SelectedOSBB.IdHead)
+                    {
+                        <li class="@item.Active">
+                            <a href='@Url.Action(item.Action, "Main", new  { id = ViewBag.SelectedOSBB.Id })'>
+                                <i class="@item.IClass"></i>
+                                <p>@item.MenuItem</p>
+                            </a>
+                        </li>
+                    }
+                    if (item.Action == "MyOSBBSettings" && ViewBag.User.Id != ViewBag.SelectedOSBB.IdHead)
+                    {
+                        continue;
+                    }
+                    if (item.Action != "MyOSBBSettings")
+                    {
+                        <li class="@item.Active">
+                            <a href='@Url.Action(item.Action, "Main", new  { id = ViewBag.SelectedOSBB.Id })'>
+                                <i class="@item.IClass"></i>
+                                <p>@item.MenuItem</p>
+                            </a>
+                        </li>
+                    }
+
+                }
+            </ul>
+        </div>
+    </div>
+
+    <div class="main-panel">
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar bar1"></span>
+                        <span class="icon-bar bar2"></span>
+                        <span class="icon-bar bar3"></span>
+                    </button>
+                    <a class="navbar-brand" href='@Url.Action("MyOSBBSettings", "Main")'>Налаштування ОСББ</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <div class="dropdown" style="top: 3px;">
+                                @if (Model.OSBBList.Count == 0)
+                                {
+                                    <a href="#" class="btn dropdown-toggle-danger btn-primary btn-danger disabled" data-toggle="dropdown" style="border-radius: 5px;">
+                                        Відсутні ОСББ
+                                        <b class="caret"></b>
+                                    </a>
+                                }
+                                @if (Model.OSBBList.Count != 0)
+                                {
+                                    <a href="#" class="btn dropdown-toggle-success btn-primary btn-success" data-toggle="dropdown" style="border-radius: 5px;">
+                                        @ViewBag.SelectedOSBB.Name
+                                        <b class="caret"></b>
+                                    </a>
+                                    <ul id="osbbList" class="dropdown-menu" style="position: absolute; display:  block; right: 48px; top: 46px;">
+                                        @foreach (var item in @Model.OSBBList)
+                                        {
+                                            <li><a href='@Url.Action("Main", "Main", new { id = item.Id })'>@item.Name</a></li>
+                                        }
+                                    </ul>
+                                }
+                                <button class="btn btn-success" style="margin: 15px 3px; font-size: 14px; padding: 7px 6px; border-radius: 7px;"
+                                        onclick="location.href='@Url.Action("MyOSBBAdd", "Main")'">
+                                    <span class="ti-plus"></span>
+                                </button>
+
+                            </div>
+                        </li>
+                        <li>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="ti-panel"></i>
+                                <p>Статистика</p>
+                            </a>
+                        </li>
+                        @*<li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <i class="ti-bell"></i>
+                                    <p class="notification">5</p>
+                                    <p>Новини</p>
+                                    <b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">Notification 1</a></li>
+                                    <li><a href="#">Notification 2</a></li>
+                                    <li><a href="#">Notification 3</a></li>
+                                    <li><a href="#">Notification 4</a></li>
+                                    <li><a href="#">Another notification</a></li>
+                                </ul>
+                            </li>*@
+                        <li>
+                            <p class="loginAS"><span style="color: #9A9A9A">Ви увішли як </span><span style="color: #f5593d">@ViewBag.User.Login</span></p>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("LogOff")">
+                                <i class="ti-lock"></i>
+                                <p>Вийти</p>
+                            </a>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </nav>
+        <div class="content">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="card border-dark mb-3" style="border-color: #343a40!important;margin-bottom: 1rem!important;">
+                        <div class="card-header" style="text-align: center; font-family: 'Comfortaa', cursive; font-size: 20pt; text-decoration: underline;
+                                border-radius: calc(.25rem - 1px) calc(.25rem - 1px) 0 0; padding: .75rem 1.25rem; margin-bottom: 0; background-color: #eb5e28; color: #ffffff;
+                                border-bottom: 1px solid rgba(0,0,0,.125); padding: 12px 20px 12px 20px; border-radius: 6px 6px 0px 0px;">
+                            @ViewBag.SelectedOSBB.Name
+                        </div>
+                        <div class="card-body text-dark" style="color: #343a40!important; padding: 20px;">
+                            <h5 class="card-title" style="margin-bottom: .75rem; margin-bottom: .5rem; font-family: inherit; font-weight: 500; line-height: 1.2;
+                                color: inherit;"></h5>
+                            <div class="card-text">
+                                <div class="row">
+                                    <div class="col-lg-5" style="width: max-content;">
+                                        <div class="card">
+                                            <div class="content" style="font-family: 'Comfortaa', cursive;">
+                                                @using (Html.BeginForm("UpdateOSBBName", "Main", FormMethod.Post, new
+                                                {
+                                                    @class = "register-form",
+                                                    enctype = "multipart/form-data",
+                                                    role = "form",
+                                                    autocomplete = "off"
+                                                }))
+                                                {
+                                                    @Html.AntiForgeryToken()
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <div class="form-group">
+                                                                <label>Назва</label>
+                                                                @*<input type="text" class="form-control border-input" placeholder="Ім'я" value="@ViewBag.User.FirstName">*@
+                                                                @Html.EditorFor(model => model.selectedOSBB.Name, new
+                                                                {
+                                                                    htmlAttributes = new
+                                                                    {
+                                                                        @class = "input form-control border-input",
+                                                                        required = "required",
+                                                                        type = "text",
+                                                                        placeholder = "Назва осбб",
+                                                                        @Value = @ViewBag.SelectedOSBB.Name
+                                                                    }
+                                                                })
+                                                                @Html.EditorFor(model => model.selectedOSBB.Id, new
+                                                                {
+                                                                    htmlAttributes = new
+                                                                    {
+                                                                        @class = "input form-control border-input",
+                                                                        required = "required",
+                                                                        type = "hidden",
+                                                                        @Value = @ViewBag.SelectedOSBB.Id
+                                                                    }
+                                                                })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <div class="form-group">
+                                                                <label style="width: 100%">Кількість квартир: @ViewBag.SelectedOSBB.quantityOfFlats</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <div class="form-group">
+                                                                <div class="input-group">
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <hr />
+
+                                                    <div class="text-center">
+                                                        <button type="submit" class="btn btn-info btn-fill btn-wd">
+                                                            Змінити дані
+                                                        </button>
+                                                    </div>
+                                                    <div class="clearfix"></div>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="card">
+                                            <div class="content table-responsive table-full-width" style="padding-top: 0px;">
+                                                <table class="table table-hover" style="text-align: center;">
+                                                    <thead>
+                                                        <tr style="padding-top: 0px;">
+                                                            <th>Квартира №</th>
+                                                            <th>ПІБ мешканя</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var user in ViewBag.OSBBUsers)
+                                                        {
+
+                                                            <tr>
+                                                                <td>@user.ApartmentNumber</td>
+                                                                <td>@user.UserName</td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="osbbservices" class="col-lg-6">
+                    <div class="card">
+                        <div class="content" style="font-family: 'Comfortaa', cursive;">
+                            <div class="content table-responsive table-full-width">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="8" style="font-size: 15pt">Послуги, які надаються мешканцям ОСББ</th>
+                                        </tr>
+                                        <tr style="text-align: center">
+                                            @*<td colspan="8">
+                                                    <button class="btn btn-info btn-fill" onclick="location.href='@Url.Action("", "Main")'">Додати послугу для оплати</button>
+                                                </td>*@
+                                            <td colspan="8">
+                                                <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#exampleModal1">
+                                                    Додати послугу для оплати
+                                                </button>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                            <th>№</th>
+                                            <th>Назва послуги</th>
+                                            <th>Рахунок</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody style="text-align:  center;">
+
+                                        @for (int i = 0; i < Enumerable.Count(ViewBag.OSBBAccountServices); i++)
+                                        {
+                                            foreach (var accountTypeServices in ViewBag.OSBBTypeServices)
+                                            {
+                                                if (ViewBag.OSBBAccountServices[i].IdType == @accountTypeServices.Id)
+                                                {
+
+                                                    int num = i + 1;
+                                                    <tr>
+                                                        @using (Html.BeginForm("UpdateAccountNumber", "Main", FormMethod.Post, new
+                                                        {
+                                                            @class = "register-form",
+                                                            enctype = "multipart/form-data",
+                                                            role = "form",
+                                                            autocomplete = "off"
+                                                        }))
+                                                        {
+                                                            @Html.AntiForgeryToken()
+                                                            <td>@num</td>
+                                                            <td>@accountTypeServices.Name</td>
+                                                            <td>
+
+                                                                @Html.EditorFor(model => model.osbbAccountService.AccountNumber, new
+                                                                {
+                                                                    htmlAttributes = new
+                                                                    {
+                                                                        @class = "input form-control border-input",
+                                                                        required = "required",
+                                                                        type = "text",
+                                                                        placeholder = "Рахунок послуги",
+                                                                        @Value = @ViewBag.OSBBAccountServices[i].AccountNumber
+                                                                    }
+                                                                })
+                                                                @Html.EditorFor(model => model.osbbAccountService.Id, new
+                                                                {
+                                                                    htmlAttributes = new
+                                                                    {
+                                                                        @class = "input form-control border-input",
+                                                                        required = "required",
+                                                                        type = "hidden",
+                                                                        @Value = @ViewBag.OSBBAccountServices[i].Id
+                                                                    }
+                                                                })
+                                                                @Html.EditorFor(model => model.osbbAccountService.IdOSBB, new
+                                                                {
+                                                                    htmlAttributes = new
+                                                                    {
+                                                                        @class = "input form-control border-input",
+                                                                        required = "required",
+                                                                        type = "hidden",
+                                                                        @Value = @ViewBag.SelectedOSBB.Id
+                                                                    }
+                                                                })
+
+                                                            </td>
+                                                            <td>
+                                                                <button class="btn btn-info btn-fill" type="submit">Оновити</button>
+                                                            </td>
+                                                        }
+                                                        <td>
+                                                            <button id="tag<%=@ViewBag.OSBBAccountServices[i].Id%>" class="btn btn-danger btn-fill" data-toggle="modal" data-target="#exampleModal2"
+                                                                    data-buttonid="@ViewBag.OSBBAccountServices[i].Id" data-typeid="@accountTypeServices.Id" data-typename="@accountTypeServices.Name" data-typenumber="@ViewBag.OSBBAccountServices[i].AccountNumber">
+                                                                Видалити
+                                                            </button>
+
+                                                        </td>
+                                                        
+                                                    </tr>
+
+                                                }
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                @if (ViewBag.User.Id == ViewBag.SelectedOSBB.IdHead)
+                {
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="content" style="font-family: 'Comfortaa', cursive; text-align:  center;">
+                                <div class="content table-responsive table-full-width">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <td colspan="10" style="text-align: center; font-family: 'Comfortaa', cursive; font-size: 20pt;">Запити користувачів на зміни у @ViewBag.SelectedOSBB.Name</td>
+                                            </tr>
+                                            <tr>
+                                                <th>№</th>
+                                                <th>Пошта</th>
+                                                <th>Ім'я</th>
+                                                <th>Прізвище</th>
+                                                <th>По батькові</th>
+                                                <th hidden>Id ОСББ</th>
+                                                <th>Назва ОСББ</th>
+                                                <th>Номер квартири</th>
+                                                <th>Статус</th>
+                                            </tr>
+                                            @if (Enumerable.Count(ViewBag.AddTempOSBB) == 0)
+                                            {
+                                                <tr>
+                                                    <td colspan="10" style="text-align: center; font-family: 'Comfortaa', cursive; font-size: 15pt; color: #f5593d">Немає запитів для змін у @ViewBag.SelectedOSBB.Name</td>
+                                                </tr>
+                                            }
+                                            else
+                                            {
+                                                for (int i = 0; i < Enumerable.Count(ViewBag.AddTempOSBB); i++)
+                                                {
+                                                    int count = i + 1;
+                                                <tr>
+                                                    <td>@count</td>
+                                                    <td>@ViewBag.AddTempOSBB[i].Email</td>
+                                                    <td>@ViewBag.AddTempOSBB[i].FirstName</td>
+                                                    <td>@ViewBag.AddTempOSBB[i].MiddleName</td>
+                                                    <td>@ViewBag.AddTempOSBB[i].LastName</td>
+                                                    <td>@ViewBag.AddTempOSBB[i].OSBBName</td>
+                                                    <td>@ViewBag.AddTempOSBB[i].ApartmentNumber</td>
+                                                    @if (ViewBag.AddTempOSBB[i].Action == "add")
+                                                    {
+                                                        <td style="background-color: #7AC29A; color: #fff;">
+                                                            На розгляді додавання
+                                                        </td>
+                                                        <td>
+                                                            <button class="btn btn-success btn-fill" onclick="location.href='@Url.Action("AddTempApartmentToMain", "Main",
+                                                                                new { selectedOSBBIdInDropDown = @ViewBag.SelectedOSBB.Id, addedId = @ViewBag.AddTempOSBB[i].Id,
+                                                                                    userId = @ViewBag.AddTempOSBB[i].IdUser,
+                                                                                    apartmentNumber = @ViewBag.AddTempOSBB[i].ApartmentNumber})'">
+                                                                Підтвердити
+                                                            </button>
+                                                        </td>
+                                                    }
+                                                    @if (ViewBag.AddTempOSBB[i].Action == "delete")
+                                                    {
+                                                        <td style="background-color: #eb2828; color: #fff;">
+                                                            На розгляді видалення
+                                                        </td>
+                                                        <td>
+                                                            <button class="btn btn-success btn-fill" onclick="location.href='@Url.Action("DeleteApartment", "Main",
+                                                                                new { selectedOSBBIdInDropDown = @ViewBag.SelectedOSBB.Id, deletedIdOSBB = @ViewBag.AddTempOSBB[i].IdOSBB,
+                                                                                    deletedIdApartmentNumber = @ViewBag.AddTempOSBB[i].ApartmentNumber})'">
+                                                                Підтвердити
+                                                            </button>
+                                                        </td>
+                                                    }
+
+                                                    <td>
+                                                        <button class="btn btn-danger btn-fill" onclick="location.href='@Url.Action("DeleteTempApartment", "Main",
+                                                                                           new { page = "MyOSBBSettings", selectedOSBBIdInDropDown = @ViewBag.SelectedOSBB.Id, deletedIdOSBB = @ViewBag.AddTempOSBB[i].IdOSBB,
+                                                                                           deletedIdApartmentNumber = @ViewBag.AddTempOSBB[i].ApartmentNumber})'">
+                                                            Відхилити
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                }
+                                            }
+
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <footer class="footer">
+            <div class="container-fluid">
+                <nav class="pull-left">
+                    <ul>
+
+                        <li>
+                            <a href="https://vntu.edu.ua/">
+                                ВНТУ
+                            </a>
+                        </li>
+                        <li>
+                            <a href="http://fcsa.vntu.edu.ua/">
+                                ФКСА
+                            </a>
+                        </li>
+                        <li>
+                            <a href="http://www.creative-tim.com/license">
+                                Licenses
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                <div class="copyright pull-right">
+                    &copy;
+                    <script>document.write(new Date().getFullYear())</script>, зроблено з  <i class="fa fa-heart heart"></i> від Плисака Владислава
+                    <a href="https://www.facebook.com/profile.php?id=100011492971959"><i class="fa fa-facebook facebook"></i></a>
+                    <a href="https://plus.google.com/u/0/111604599843653094663"><i class="fa fa-google-plus google-plus" style="color: #EB5E28;"></i></a>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('button[id^="tag"]').on('click', function () {
+            var modal = document.getElementById("exampleModal2");
+            console.log(this.dataset.typeid);
+            modal.find('.modal-title').text('Ви точно хочете видалити послугу "' + this.dataset.typename + '" ???');
+            modal.find('.modal-body #accountname').val(this.dataset.accountname);
+            modal.find('.modal-body #accountnumber').val(this.dataset.typenumber);
+            modal.find('.modal-body #accountid').val(this.dataset.typeid);
+            console.log(this.dataset.typeid);
+        });
+    });
+
+   $('#exampleModal2').on('show.bs.modal', function (event) {
+       //var button = $(event.relatedTarget)
+       var button = $(event.relatedTarget)
+       //var button = document.getElementById('deleteButton');
+       console.log(button.data('typename'));
+       console.log(button.data('typenumber'));
+       //console.log(button.dataset.typenumber);
+
+       //var recipient = button.data('whatever')
+       var modal = $(this);
+       modal.find('.modal-title').text('Ви точно хочете видалити послугу "' + button.data('typename')/*button.dataset.typename*/ + '" ???');
+       //modal.find('.modal-body #accountname').val(button.dataset.accountname);
+       //modal.find('.modal-body #accountnumber').val(button.dataset.typenumber);
+       //modal.find('.modal-body #accountid').val(button.dataset.typeid);
+
+       modal.find('.modal-body #accountname').val(button.data('typename'));
+       modal.find('.modal-body #accountnumber').val(button.data('typenumber'));
+       modal.find('.modal-body #accountid').val(button.data('buttonid'));
+       //console.log(button.dataset.typeid);
+    })
+
+    
+</script>

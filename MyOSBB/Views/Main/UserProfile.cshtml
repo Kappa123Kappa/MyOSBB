@@ -1,0 +1,785 @@
+﻿@model MyOSBB.Models.ProfileViewModel
+@{
+	ViewBag.Title = "Профіль";
+	Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+
+
+
+
+<div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1" aria-hidden="true">
+	<div class="modal-dialog" role="document" style=" display:  block; margin:  auto; left:  0px; top: 25%;">
+		<div class="modal-content" style="font-family: 'Comfortaa', cursive;font-size: 15pt;">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel1" style="text-align:center;">Зміна пароля</h5>
+				<button type="button" id="closemodal" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			@using (Html.BeginForm("UpdateAccountNumber", "Main", FormMethod.Post, new
+			{
+				@class = "register-form",
+				enctype = "multipart/form-data",
+				role = "form",
+				autocomplete = "off"
+			}))
+			{
+				<div class="modal-body">
+
+					@Html.AntiForgeryToken()
+					<div class="row" style="padding-left: 15px;">
+						<div class="form-group">
+
+							@Html.EditorFor(model => model.changePasswordModel.IdUser, new
+							{
+								htmlAttributes = new
+								{
+									@class = "input form-control border-input",
+									required = "required",
+									type = "hidden",
+									@Value = @ViewBag.User.Id
+								}
+							})
+							<label>Старий пароль:</label>
+							@Html.EditorFor(model => model.changePasswordModel.OldPassword, new
+							{
+								htmlAttributes = new
+								{
+									@class = "input form-control border-input",
+									required = "required",
+									type = "password",
+									placeholder = "Старий пароль",
+									id = "OldPassword"
+								}
+							})
+						</div>
+					</div>
+					<div class="row" style="padding-left: 15px;">
+						<div class="form-group">
+							<label>Новий пароль:</label>
+							@Html.EditorFor(model => model.changePasswordModel.NewPassword, new
+							{
+								htmlAttributes = new
+								{
+									@class = "input form-control border-input",
+									required = "required",
+									type = "password",
+									placeholder = "Новий пароль",
+									id = "Password"
+								}
+							})
+						</div>
+					</div>
+					<div class="row" style="padding-left: 15px;">
+						<div class="form-group">
+							<label>Повторіть новий пароль:</label>
+							@Html.EditorFor(model => model.changePasswordModel.NewPasswordConfirm, new
+							{
+								htmlAttributes = new
+								{
+									@class = "input form-control border-input",
+									required = "required",
+									type = "password",
+									placeholder = "Повторіть новий пароль",
+									id = "PasswordConfirm"
+								}
+							})
+						</div>
+					</div>
+
+					<div class="row" style="padding-left: 15px; width: 100%;">
+						<div id="messageArea" class="row alert alert-warning" style="margin: auto; background-color: #dd035614; color: #dd0330; font-size: 15pt;  border: 1px solid #dd0330;
+								display: none;">
+							<span id='messageOldPass'>Старий пароль невірний</span>
+							<span id='message'>Паролі не співпадають</span>
+
+
+						</div>
+					</div>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" id="submitbutton" class="btn btn-info">Змінити</button>
+					<button type="button" id="cancelbutton" class="btn btn-danger" data-dismiss="modal">Відміна</button>
+				</div>
+			}
+		</div>
+	</div>
+</div>
+
+<div class="wrapper">
+	<div class="sidebar" data-background-color="white" data-active-color="danger">
+		<div class="sidebar-wrapper">
+			<div class="logo">
+				<a href="http://www.creative-tim.com" class="simple-text">
+					Моє ОСББ
+				</a>
+			</div>
+
+			<ul class="nav">
+				@foreach (var item in ViewBag.PageItemsList)
+				{
+					if (item.Action == "MyOSBBSettings" && ViewBag.User.Id == ViewBag.SelectedOSBB.IdHead)
+					{
+						<li class="@item.Active">
+							<a href='@Url.Action(item.Action, "Main", new  { id = ViewBag.SelectedOSBB.Id })'>
+								<i class="@item.IClass"></i>
+								<p>@item.MenuItem</p>
+							</a>
+						</li>
+					}
+					if (item.Action == "MyOSBBSettings" && ViewBag.User.Id != ViewBag.SelectedOSBB.IdHead)
+					{
+						continue;
+					}
+					if (item.Action != "MyOSBBSettings")
+					{
+						<li class="@item.Active">
+							<a href='@Url.Action(item.Action, "Main", new  { id = ViewBag.SelectedOSBB.Id })'>
+								<i class="@item.IClass"></i>
+								<p>@item.MenuItem</p>
+							</a>
+						</li>
+					}
+				}
+			</ul>
+		</div>
+	</div>
+
+	<div class="main-panel">
+		<nav class="navbar navbar-default">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar bar1"></span>
+						<span class="icon-bar bar2"></span>
+						<span class="icon-bar bar3"></span>
+					</button>
+					<a class="navbar-brand" href='@Url.Action("Profile", "Main")'>Профіль</a>
+				</div>
+				<div class="collapse navbar-collapse">
+					<ul class="nav navbar-nav navbar-right">
+						<li>
+							<div class="dropdown" style="top: 3px;">
+								@if (Model.OSBBList.Count() == 0)
+								{
+									<a href="#" class="btn dropdown-toggle-danger bctn-primary btn-danger disabled" data-toggle="dropdown" style="border-radius: 5px;">
+										Відсутні ОСББ
+										<b class="caret"></b>
+									</a>
+								}
+								@if (Model.OSBBList.Count() != 0)
+								{
+									<a href="#" class="btn dropdown-toggle-success btn-primary btn-success" data-toggle="dropdown" style="border-radius: 5px;">
+										@ViewBag.SelectedOSBB.Name
+										<b class="caret"></b>
+									</a>
+									<ul id="osbbList" class="dropdown-menu" style="position: absolute; display:  block; right: 48px; top: 46px;">
+										@foreach (var item in Model.OSBBList)
+										{
+											<li><a href='@Url.Action("Profile", "Main", new  { id = item.Id })'>@item.Name</a></li>
+										}
+									</ul>
+								}
+								<button class="btn btn-success" style="margin: 15px 3px; font-size: 14px; padding: 7px 6px; border-radius: 7px;"><span class="ti-plus"></span></button>
+
+							</div>
+						</li>
+						<li>
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								<i class="ti-panel"></i>
+								<p>Статистика</p>
+							</a>
+						</li>
+						<li>
+							<p class="loginAS"><span style="color: #9A9A9A">Ви увішли як </span><span style="color: #f5593d">@ViewBag.User.Login</span></p>
+						</li>
+						<li>
+							<a href="@Url.Action("LogOff")">
+								<i class="ti-lock"></i>
+								<p>Вийти</p>
+							</a>
+						</li>
+					</ul>
+
+				</div>
+			</div>
+		</nav>
+		<div class="content" style="min-height: calc(100% - 150px);">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-lg-4 col-md-5">
+						<div class="card card-user">
+							<div class="image">
+								<img src="~/Content/images/backTexture.jpg" alt="..." />
+							</div>
+							<div class="content">
+								<div class="author">
+									<img class="avatar border-white" src="~/Content/images/userDefault.png" alt="..." />
+									<h4 class="title">
+										@ViewBag.User.LastName @ViewBag.User.FirstName @ViewBag.User.MiddleName <br />
+										<a href="mailto:@ViewBag.User.Email"><small>написати @ViewBag.User.Email</small></a>
+									</h4>
+								</div>
+							</div>
+							<hr>
+							<div class="text-center">
+								<div class="row">
+								</div>
+							</div>
+						</div>
+
+					</div>
+					<div class="col-lg-8 col-md-7">
+						<div class="card">
+							<div class="header">
+								<h4 class="title">Змінити дані</h4>
+
+
+								<div class="card" id="passwordischanged" style="display: none; margin: auto; width: max-content;">
+									<div class="content">
+										<div class="text-center">
+											<span style="color: rgb(122, 194, 154);font-size: 22pt; font-family: 'Comfortaa', cursive;">Пароль змінено</span>
+										</div>
+									</div>
+								</div>
+
+							</div>
+							<div class="header">
+								<h5 class="title">Дані користувача</h5>
+							</div>
+							<div class="content">
+								@using (Html.BeginForm("UpdateUserData", "Main", FormMethod.Post, new { @class = "register-form", role = "form" }))
+								{
+									@Html.AntiForgeryToken()
+									<div class="row">
+										<div class="col-md-4">
+											<div class="form-group">
+												<label>Ім'я</label>
+												@*<input type="text" class="form-control border-input" placeholder="Ім'я" value="@ViewBag.User.FirstName">*@
+												@Html.EditorFor(model => model.registration.FirstName, new
+												{
+													htmlAttributes = new
+													{
+														@class = "input form-control border-input",
+														id = "firstName",
+														name = "firstName",
+														required = "required",
+														type = "text",
+														placeholder = "Ім'я",
+														@Value = @ViewBag.User.FirstName
+													}
+												})
+											</div>
+										</div>
+										<div class="col-md-4">
+											<div class="form-group">
+												<label>Прізвище</label>
+												@Html.EditorFor(model => model.registration.LastName, new
+												{
+													htmlAttributes = new
+													{
+														@class = "input form-control border-input",
+														id = "lastName",
+														name = "lastName",
+														required = "required",
+														type = "text",
+														placeholder = "Прізвище",
+														@Value = @ViewBag.User.LastName
+													}
+												})
+											</div>
+										</div>
+										<div class="col-md-4">
+											<div class="form-group">
+												<label for="exampleInputEmail1">По батькові</label>
+												@Html.EditorFor(model => model.registration.MiddleName, new
+												{
+													htmlAttributes = new
+													{
+														@class = "input form-control border-input",
+														id = "middleName",
+														name = "middleName",
+														required = "required",
+														type = "text",
+														placeholder = "По батькові",
+														@Value = @ViewBag.User.MiddleName
+													}
+												})
+											</div>
+										</div>
+									</div>
+
+									<div class="row">
+										<div class="col-md-4">
+											<div class="form-group">
+												<label>Пошта</label>
+												@Html.EditorFor(model => model.registration.Email, new
+												{
+													htmlAttributes = new
+													{
+														@class = "input form-control border-input",
+														id = "email",
+														name = "email",
+														required = "required",
+														type = "text",
+														placeholder = "Email",
+														@Value = @ViewBag.User.Email
+													}
+												})
+											</div>
+										</div>
+										<div class="col-md-4">
+											<div class="form-group">
+												<label>Телефон</label>
+												@Html.EditorFor(model => model.registration.Phone, new
+												{
+													htmlAttributes = new
+													{
+														@class = "input form-control border-input",
+														id = "phone",
+														name = "phone",
+														required = "required",
+														type = "text",
+														placeholder = "Телефон",
+														@Value = @ViewBag.User.Phone
+													}
+												})
+											</div>
+										</div>
+									</div>
+									<hr />
+
+									<div class="text-center">
+										<button type="submit" class="btn btn-info btn-fill btn-wd">Оновити дані</button>
+									</div>
+									<hr />
+									<div class="text-center">
+										<button type="button" class="btn btn-info btn-wd" data-toggle="modal" data-target="#exampleModal1">Змінити пароль</button>
+									</div>
+
+
+
+
+									<div class="clearfix"></div>
+								}
+								@if (ViewBag.ChangePasswordError != null)
+								{
+									<div class="text-center">
+										<div class="row alert alert-warning" style="margin: auto; background-color: #dd035614; color: #dd0330; font-size: 15pt;  border: 1px solid #dd0330;">
+											<span>Старий пароль невірний</span>
+										</div>
+									</div>
+								}
+							</div>
+						</div>
+					</div>
+
+
+				</div>
+				<div class="row">
+					<div class="col-lg-5 col-sm-6">
+						<div class="card">
+							<div class="content" style="font-family: 'Comfortaa', cursive;">
+								<div class="content table-responsive table-full-width">
+									<table class="table table-hover">
+										<thead>
+											<tr>
+												<th colspan="4" style="font-size: 15pt">Керувати ОСББ</th>
+											</tr>
+											<tr style="text-align: center">
+												<td colspan="4">
+													<button class="btn btn-info btn-fill" onclick="location.href='@Url.Action("MyOSBBAdd", "Main")'">Додати Квартиру</button>
+												</td>
+
+											</tr>
+											<tr>
+												<th>№</th>
+												<th>Назва ОСББ</th>
+												<th>Статус</th>
+												<th></th>
+											</tr>
+										</thead>
+										<tbody style="text-align:  center;">
+											@if (Model.OSBBList.Count() == 0)
+											{
+											<td colspan="4" style="text-align: center; font-family: 'Comfortaa', cursive; font-size: 20pt; color: #f5593d">
+												У вас відсутні підключені ОСББ
+											</td>
+										}
+										else
+										{
+											for (int i = 0; i < Enumerable.Count(@ViewBag.UserOSBBApartments); i++)
+											{
+												int count = i + 1;
+												<tr>
+													<td>@count</td>
+													<td>@ViewBag.UserOSBBApartments[i].osbbName</td>
+													<td>Додана крвартира № @ViewBag.UserOSBBApartments[i].ApartmentNumber</td>
+													<td>
+														<button class="btn btn-danger btn-fill" onclick="location.href='@Url.Action("RejectTempApartment", "Main",
+                                                                              new {  selectedOSBBIdInDropDown = @ViewBag.SelectedOSBB.Id, deletedIdOSBB = @ViewBag.UserOSBBApartments[i].osbbID,
+                                                                                           deletedIdApartment = @ViewBag.UserOSBBApartments[i].ApartmentNumber })'">
+															Видалити
+														</button>
+													</td>
+												</tr>
+											}
+										}
+											@if (Enumerable.Count(ViewBag.UserAddTempOSBB) > 0)
+											{
+												for (int i = 0; i < Enumerable.Count(ViewBag.UserAddTempOSBB); i++)
+												{
+													int count = i + 1;
+													<tr>
+														<td>@count</td>
+														<td>@ViewBag.UserAddTempOSBB[i].OSBBName</td>
+														@if (ViewBag.UserAddTempOSBB[i].Action == "add")
+														{
+															<td style="background-color: #7AC29A; color: #fff;">
+																На розгляді додавання квартири №
+																@ViewBag.UserAddTempOSBB[i].ApartmentNumber
+															</td>
+															<td>
+
+																<button class="btn btn-warning btn-fill"
+																		onclick="location.href='@Url.Action("DeleteTempApartment", "Main",
+                                                                                           new { page = "UserProfile", selectedOSBBIdInDropDown = @ViewBag.SelectedOSBB.Id, deletedIdOSBB = @ViewBag.UserAddTempOSBB[i].IdOSBB,
+                                                                                           deletedIdApartmentNumber = @ViewBag.UserAddTempOSBB[i].ApartmentNumber})'">
+																	Відміна додавання
+																</button>
+															</td>
+														}
+														@if (ViewBag.UserAddTempOSBB[i].Action == "delete")
+														{
+															<td style="background-color: #eb2828; color: #fff;">
+																На розгляді видалення квартири №
+																@ViewBag.UserAddTempOSBB[i].ApartmentNumber
+															</td>
+															<td>
+																<button class="btn btn-warning btn-fill"
+																		onclick="location.href='@Url.Action("DeleteTempApartment", "Main",
+                                                                                           new { page = "UserProfile", selectedOSBBIdInDropDown = @ViewBag.SelectedOSBB.Id, deletedIdOSBB =@ViewBag.UserAddTempOSBB[i].IdOSBB,
+                                                                                           deletedIdApartmentNumber = @ViewBag.UserAddTempOSBB[i].ApartmentNumber})'">
+																	Відміна вилучення
+																</button>
+															</td>
+														}
+
+													</tr>
+												}
+											}
+
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-12 @*col-sm-6*@">
+							<div class="card">
+								<div class="content" style="font-family: 'Comfortaa', cursive;">
+									<div class="content table-responsive table-full-width">
+										<table class="table table-hover">
+											<thead>
+
+												<tr>
+													<th colspan="10" style="font-size: 15pt">Керувати Рахунками</th>
+												</tr>
+												@*<tr style="text-align: center">
+														<td colspan="10">
+															<button class="btn btn-info btn-fill" @ onclick="location.href='@Url.Action("MyOSBBAdd", "Main")'">Додати Квартиру</button>
+														</td>
+
+													</tr>*@
+												<tr>
+													<th>№</th>
+													<th>Назва ОСББ</th>
+													<th>Номер квартири</th>
+													<th>Рахунок за електроенергію</th>
+													<th>Рахунок за воду</th>
+													<th>Рахунок за газ</th>
+													<th></th>
+												</tr>
+											</thead>
+											<tbody style="text-align:  center;">
+												@if (Model.OSBBList.Count() == 0)
+												{
+												<td colspan="6" style="text-align: center; font-family: 'Comfortaa', cursive; font-size: 20pt; color: #f5593d">
+													У вас відсутні підключені ОСББ
+												</td>
+											}
+											else
+											{
+												using (Html.BeginForm("ChangeUserServicesNumbers", "Main", FormMethod.Post, new { @class = "register-form", role = "form" }))
+												{
+													@Html.AntiForgeryToken()
+													for (int i = 0; i < Enumerable.Count(@ViewBag.UserOSBBApartments); i++)
+													{
+														int count = i + 1;
+														<tr>
+															<td>@count</td>
+															<td>@ViewBag.UserOSBBApartments[i].osbbName</td>
+															<td>@ViewBag.UserOSBBApartments[i].ApartmentNumber</td>
+															@*<td>
+																	<button class="btn btn-danger btn-fill" onclick="location.href='@Url.Action("MyOSBBDelete", "Main",
+																								   new { selectedOSBBIdInDropDown = @ViewBag.SelectedOSBB.Id,  deletedIdOSBB = @ViewBag.UserOSBBApartments[i].osbbID,
+																									   deletedIdApartment = @ViewBag.UserOSBBApartments[i].ApartmentNumber })'">
+																		Видалити
+																	</button>
+																</td>*@
+															@Html.EditorFor(model => model.changeUserServicesNumbersModel.IdOSBB, new
+															{
+																htmlAttributes = new
+																{
+																	@class = "input form-control border-input",
+																	required = "required",
+																	type = "hidden",
+																	@Value = @ViewBag.UserOSBBApartments[i].osbbID
+																}
+															})
+															@Html.EditorFor(model => model.changeUserServicesNumbersModel.ApartmentNumber, new
+															{
+																htmlAttributes = new
+																{
+																	@class = "input form-control border-input",
+																	required = "required",
+																	type = "hidden",
+																	@Value = @ViewBag.UserOSBBApartments[i].ApartmentNumber
+																}
+															})
+															@if (Enumerable.Count(ViewBag.UserAccountServices) > 0)
+															{
+																for (int j = Enumerable.Count(ViewBag.UserAccountServices) - 1; j >= 0; j--)
+																{
+																	if (@ViewBag.UserAccountServices[j].ApartmentNumber == @ViewBag.UserOSBBApartments[i].ApartmentNumber
+																		&& @ViewBag.UserOSBBApartments[i].osbbID == @ViewBag.UserAccountServices[j].IdOSBB
+																		&& @ViewBag.UserAccountServices[j].IdTypeServices == 3)
+																	{
+																		<td>
+																			@Html.EditorFor(model => model.changeUserServicesNumbersModel.GazNumber, new
+																			{
+																				htmlAttributes = new
+																				{
+																					@class = "input form-control border-input",
+																					required = "required",
+																					type = "text",
+																					placeholder = "Газ",
+																					style = "width: max-content",
+																					@Value = @ViewBag.UserAccountServices[j].AccountNumber
+																				}
+																			})
+																		</td>
+																	}
+																	if (@ViewBag.UserAccountServices[j].ApartmentNumber == @ViewBag.UserOSBBApartments[i].ApartmentNumber
+																		&& @ViewBag.UserOSBBApartments[i].osbbID == @ViewBag.UserAccountServices[j].IdOSBB
+																		&& @ViewBag.UserAccountServices[j].IdTypeServices == 2)
+																	{
+																		<td>
+																			@Html.EditorFor(model => model.changeUserServicesNumbersModel.WaterNumber, new
+																			{
+																				htmlAttributes = new
+																				{
+																					@class = "input form-control border-input",
+																					required = "required",
+																					type = "text",
+																					placeholder = "Вода",
+																					style = "width: max-content",
+																					@Value = @ViewBag.UserAccountServices[j].AccountNumber
+																				}
+																			})
+																		</td>
+																	}
+																	if (@ViewBag.UserAccountServices[j].ApartmentNumber == @ViewBag.UserOSBBApartments[i].ApartmentNumber
+																		&& @ViewBag.UserOSBBApartments[i].osbbID == @ViewBag.UserAccountServices[j].IdOSBB
+																		&& @ViewBag.UserAccountServices[j].IdTypeServices == 1)
+																	{
+																		<td>
+																			@Html.EditorFor(model => model.changeUserServicesNumbersModel.ElectricityNumber, new
+																			{
+																				htmlAttributes = new
+																				{
+																					@class = "input form-control border-input",
+																					required = "required",
+																					type = "text",
+																					placeholder = "Електроенергія",
+																					style = "width: max-content",
+																					@Value = @ViewBag.UserAccountServices[j].AccountNumber
+																				}
+																			})
+																		</td>
+																	}
+
+																}
+															}
+															else
+															{
+																<td> - </td>
+																<td> - </td>
+																<td> - </td>
+															}
+															<td>
+																<button class="btn btn-info btn-fill" type="submit" onclick="location.href='@Url.Action("", "")'">Змінити рахунки</button>
+															</td>
+														</tr>
+													}
+												}
+											}
+												@*@if (Enumerable.Count(ViewBag.UserAddTempOSBB) > 0)
+													{
+														for (int i = 0; i < Enumerable.Count(ViewBag.UserAddTempOSBB); i++)
+														{
+															int count = i + 1;
+															<tr>
+																<td>@count</td>
+																<td>@ViewBag.UserAddTempOSBB[i].OSBBName</td>
+																@if (ViewBag.UserAddTempOSBB[i].Action == "add")
+																{
+																	<td style="background-color: #7AC29A; color: #fff;">
+																		На розгляді додавання квартири №
+																		@ViewBag.UserAddTempOSBB[i].ApartmentNumber
+																	</td>
+																}
+																@if (ViewBag.UserAddTempOSBB[i].Action == "delete")
+																{
+																	<td style="background-color: #eb2828; color: #fff;">
+																		На розгляді видалення квартири №
+																		@ViewBag.UserAddTempOSBB[i].ApartmentNumber
+																	</td>
+																}
+																<td>
+																	@*id="deleteTempOSBB"     @
+																	<button class="btn btn-danger btn-fill"
+																			onclick="location.href='@Url.Action("DeleteTempOSBB", "Main",
+																							   new { selectedOSBBIdInDropDown = @ViewBag.SelectedOSBB.Id, deletedId = @ViewBag.UserAddTempOSBB[i].Id })'">
+																		Видалити
+																	</button>
+																</td>
+																<td></td>
+																<td></td>
+																<td></td>
+																<td></td>
+															</tr>
+														}
+													}*@
+
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+
+
+						</div>
+					</div>
+				</div>
+
+				<footer class="footer">
+					<div class="container-fluid">
+						<nav class="pull-left">
+							<ul>
+
+								<li>
+									<a href="https://vntu.edu.ua/">
+										ВНТУ
+									</a>
+								</li>
+								<li>
+									<a href="http://fcsa.vntu.edu.ua/">
+										ФКСА
+									</a>
+								</li>
+								<li>
+									<a href="http://www.creative-tim.com/license">
+										Licenses
+									</a>
+								</li>
+							</ul>
+						</nav>
+						<div class="copyright pull-right">
+							&copy;
+							<script>document.write(new Date().getFullYear())</script>, зроблено з  <i class="fa fa-heart heart"></i> від Плисака Владислава
+							<a href="https://www.facebook.com/profile.php?id=100011492971959"><i class="fa fa-facebook facebook"></i></a>
+							<a href="https://plus.google.com/u/0/111604599843653094663"><i class="fa fa-google-plus google-plus" style="color: #EB5E28;"></i></a>
+						</div>
+					</div>
+				</footer>
+			</div>
+		</div>
+		</div>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+		<script type="text/javascript">
+
+        window.onload = function () {
+            document.getElementById('messageArea').style.display = 'none';
+            document.getElementById('message').style.display = 'none';
+			document.getElementById('messageOldPass').style.display = 'none';
+			document.getElementById('passwordischanged').style.display = 'none';
+
+            console.log('@ViewBag.ChangePasswordError');
+        }
+
+		$("#submitbutton").click(function () {
+			$.getJSON('/Main/getHashPassword', { oldpassword1: '@ViewBag.User.Password', oldpassword2: $('#OldPassword').val() }, function (data) {
+				console.log(data);
+				if (data == 1 && $('#Password').val() == $('#PasswordConfirm').val()) {
+					document.getElementById('messageArea').style.display = 'none';
+					$.post("/Main/ChangeUserPassword",
+						{
+							model: {
+								ChangePasswordModel: {
+									IdOSBB: @ViewBag.SelectedOSBB.Id,
+
+									IdUser: @ViewBag.User.Id,
+
+									OldPassword: $('#OldPassword').val(),
+
+									NewPassword: $('#Password').val(),
+
+									NewPasswordConfirm: $('#PasswordConfirm').val()
+								}
+							}
+						});
+					document.getElementById('exampleModal1').style.display = 'none';
+					document.getElementById('messageOldPass').style.display = 'none';
+					document.getElementById('message').style.display = 'none';
+					document.getElementById('passwordischanged').style.display = 'block';
+					$('#passwordischanged').delay(2000).fadeOut();
+					$("#cancelbutton").trigger("click");
+				}
+				else {
+					document.getElementById('messageArea').style.display = 'block';
+					document.getElementById('messageOldPass').style.display = 'block';
+					document.getElementById('messageOldPass').innerHTML = 'Старий пароль невірний. ';
+				}
+			});
+            if ($('#Password').val() != $('#PasswordConfirm').val()) {
+                document.getElementById('messageArea').style.display = 'block';
+                document.getElementById('message').style.display = 'block';
+            }
+            else {
+                document.getElementById('message').style.display = 'none';
+            }
+
+        });
+
+
+
+        $("#closemodal").click(function () {
+            document.getElementById('messageArea').style.display = 'none';
+        });
+
+        $("#cancelbutton").click(function () {
+            document.getElementById('messageArea').style.display = 'none';
+		});
+
+		$("#cancelbutton").bind("click", (function () {
+			document.getElementById('messageArea').style.display = 'none';
+		}));
+
+		</script>

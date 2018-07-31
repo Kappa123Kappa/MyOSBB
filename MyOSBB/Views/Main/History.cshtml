@@ -1,0 +1,19 @@
+﻿@model List<MyOSBB.Models.Message>
+
+
+<div id="Messages">
+    @for (int i = Model.Count - 1; i >= 0; i--)
+    {
+        <p>
+            @Model[i].MessageDate<br />
+            @if (@Model[i].User != null)
+            {
+                <b>@(Model[i].User + ":")</b> @Model[i].Text
+            }
+            else
+            {
+				<span class="serverMes">@Model[i].Text</span>
+            }
+        </p>
+    }
+</div>

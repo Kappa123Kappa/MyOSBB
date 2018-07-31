@@ -1,0 +1,473 @@
+﻿@model MyOSBB.Models.ChatModel
+@{
+	Layout = "~/Views/Shared/_MainLayout.cshtml";
+	ViewBag.Title = "Чат";
+}
+
+
+<div class="wrapper">
+	<div class="sidebar" data-background-color="white" data-active-color="danger">
+		<div class="sidebar-wrapper">
+			<div class="logo">
+				<a href="http://www.creative-tim.com" class="simple-text">
+					Моє ОСББ
+				</a>
+			</div>
+
+            <ul class="nav">
+                @foreach (var item in ViewBag.PageItemsList)
+                {
+                    if (item.Action == "MyOSBBSettings" && ViewBag.User.Id == ViewBag.SelectedOSBB.IdHead)
+                    {
+                        <li class="@item.Active">
+                            <a href='@Url.Action(item.Action, "Main", new  { id = ViewBag.SelectedOSBB.Id })'>
+                                <i class="@item.IClass"></i>
+                                <p>@item.MenuItem</p>
+                            </a>
+                        </li>
+                    }
+                    if (item.Action == "MyOSBBSettings" && ViewBag.User.Id != ViewBag.SelectedOSBB.IdHead)
+                    {
+                        continue;
+                    }
+                    if (item.Action != "MyOSBBSettings")
+                    {
+                        <li class="@item.Active">
+                            <a href='@Url.Action(item.Action, "Main", new  { id = ViewBag.SelectedOSBB.Id })'>
+                                <i class="@item.IClass"></i>
+                                <p>@item.MenuItem</p>
+                            </a>
+                        </li>
+                    }
+                }
+            </ul>
+		</div>
+	</div>
+
+	<div class="main-panel">
+		<nav class="navbar navbar-default">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar bar1"></span>
+						<span class="icon-bar bar2"></span>
+						<span class="icon-bar bar3"></span>
+					</button>
+					<a class="navbar-brand" href='@Url.Action("Chat", "Main")'>Чат</a>
+				</div>
+				<div class="collapse navbar-collapse">
+					<ul class="nav navbar-nav navbar-right">
+						<li>
+							<div class="dropdown" style="top: 3px;">
+								@if (Model.OSBBVal.Count == 0)
+								{
+									<a href="#" class="btn dropdown-toggle-danger btn-primary btn-danger disabled" data-toggle="dropdown" style="border-radius: 5px;">
+										Відсутні ОСББ
+										<b class="caret"></b>
+									</a>
+								}
+								@if (Model.OSBBVal.Count != 0)
+								{
+									<a href="#" class="btn dropdown-toggle-success btn-primary btn-success" data-toggle="dropdown" style="border-radius: 5px;">
+										@ViewBag.SelectedOSBB.Name
+										<b class="caret"></b>
+									</a>
+									<ul id="osbbList" class="dropdown-menu" style="position: absolute; display:  block; right: 48px; top: 46px;">
+										@foreach (var item in @Model.OSBBVal)
+										{
+											<li><a href='@Url.Action("Chat", "Main", new  { id = item.Id })'>@item.Name</a></li>
+										}
+									</ul>
+								}
+								<button class="btn btn-success" style="margin: 15px 3px; font-size: 14px; padding: 7px 6px; border-radius: 7px;"><span class="ti-plus"></span></button>
+
+							</div>
+						</li>
+						<li>
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								<i class="ti-panel"></i>
+								<p>Статистика</p>
+							</a>
+						</li>
+						@*<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								<i class="ti-bell"></i>
+								<p class="notification">5</p>
+								<p>Новини</p>
+								<b class="caret"></b>
+							</a>
+							<ul class="dropdown-menu">
+								<li><a href="#">Notification 1</a></li>
+								<li><a href="#">Notification 2</a></li>
+								<li><a href="#">Notification 3</a></li>
+								<li><a href="#">Notification 4</a></li>
+								<li><a href="#">Another notification</a></li>
+							</ul>
+						</li>*@
+						<li>
+							<p class="loginAS"><span style="color: #9A9A9A">Ви увішли як </span><span style="color: #f5593d">@ViewBag.User.Login</span></p>
+						</li>
+						<li>
+							<a href="@Url.Action("LogOff")">
+								<i class="ti-lock"></i>
+								<p>Вийти</p>
+							</a>
+						</li>
+					</ul>
+
+				</div>
+			</div>
+		</nav>
+		<div class="content">
+			<div class="row">
+				<div class="col-lg-2 col-sm-4">
+					<div class="card">
+						<div class="header">
+							<h4 class="title">У чаті находяться:</h4>
+						</div>
+						<div class="content" style="font-family: 'Comfortaa', cursive;">
+							<div class="content table-responsive table-full-width">
+								<table class="table" style="text-align: left; border: none;">
+									<tbody>
+										@foreach (var item in ViewBag.AllOSBBUsers)
+										{
+											<tr>
+												<td style="text-align: left;">@item.LastName @item.FirstName</td>
+											</tr>
+										}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-8 col-sm-4">
+					<div class="card" style="min-width: 467px; width: 100%;">
+						@*<div class="header">
+								<h4 class="title">У чаті находяться:</h4>
+							</div>*@
+						<div class="content" style="font-family: 'Comfortaa', cursive; max-height: 70vh; height: 70vh;">
+							<div id="Messages" style="height: 88%; max-height: 88%; border-radius: 6px; overflow-y: scroll;">
+                                <div id="RefreshArea">
+                                    @if (Model.OSBBVal.Count() == 0)
+                                    {
+                                        <div id="Messages">
+                                            <p colspan="9" style="text-align: center; font-family: 'Comfortaa', cursive; font-size: 20pt; color: #f5593d">
+                                                Чат недоступний. У вас не підключене ОСББ.
+                                            </p>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        {
+                                            Html.RenderPartial("History", Model.Messages);
+                                        }
+                                    }
+
+                                </div>
+								
+								@*@foreach (var msg in ViewBag.Messages)
+									{
+										<p>
+											<br />
+											@if (msg.User != null)
+											{
+												<b>@(msg.User.Name + ":")</b> @msg.Text <span>@msg.Date</span>
+																	}
+											else
+											{
+												<span class="serverMes">@msg.Text</span>
+											}
+										</p>
+									}*@
+							</div>
+							@Ajax.ActionLink("ActionLink", "Chat", new { user = "", logOn = "", logOff = "", chatMessage = "" },
+new AjaxOptions { UpdateTargetId = "RefreshArea", OnSuccess = "ChatOnSuccess", OnFailure = "ChatOnFailure" },
+new { @id = "ActionLink", @style = "visibility:hidden;" })
+							<div id="inputForm" style="width: 100%">
+								<table style="width: 100%">
+									<tr>
+										<td style="width: 82%;"><textarea class="input form-control border-input" id="txtMessage"></textarea></td>
+										<td>
+											<button id="btnMessage" value="Отправить" class="btn btn-info btn-fill"
+													style="border-radius: 3px;height: 61px;display:  block;margin-left: 30%;">
+												<i class="fa fa-envelope">
+											</button></i>
+										</td>
+									</tr>
+								</table>
+							</div>
+							@*<div class="content table-responsive table-full-width">
+									<table class="table">
+										<tbody>
+											@foreach (var item in ViewBag.AllOSBBUsers)
+											{
+												<tr>
+													<td>@item.LastName @item.FirstName</td>
+												</tr>
+											}
+										</tbody>
+									</table>
+								</div>*@
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<footer class="footer">
+			<div class="container-fluid">
+				<nav class="pull-left">
+					<ul>
+
+						<li>
+							<a href="https://vntu.edu.ua/">
+								ВНТУ
+							</a>
+						</li>
+						<li>
+							<a href="http://fcsa.vntu.edu.ua/">
+								ФКСА
+							</a>
+						</li>
+						<li>
+							<a href="http://www.creative-tim.com/license">
+								Licenses
+							</a>
+						</li>
+					</ul>
+				</nav>
+				<div class="copyright pull-right">
+					&copy;
+					<script>document.write(new Date().getFullYear())</script>, зроблено з  <i class="fa fa-heart heart"></i> від Плисака Владислава
+					<a href="https://www.facebook.com/profile.php?id=100011492971959"><i class="fa fa-facebook facebook"></i></a>
+					<a href="https://plus.google.com/u/0/111604599843653094663"><i class="fa fa-google-plus google-plus" style="color: #EB5E28;"></i></a>
+				</div>
+			</div>
+		</footer>
+	</div>
+</div>
+
+
+<script type="text/javascript">
+
+	    Scroll();
+		ShowLastRefresh();
+
+        if(Model.C)
+		//каждые пять секунд обновляем чат
+		setTimeout("Refresh();", 5000);
+
+		//отправка сообщений по нажатию Enter
+		$('#txtMessage').keydown(function (e) {
+			if (e.keyCode == 13) {
+				e.preventDefault();
+				$("#btnMessage").click();
+			}
+		});
+
+		//установка обработчика нажатия кнопки для отправки сообщений
+		$("#btnMessage").click(function (data) {
+			var text = $("#txtMessage").val();
+			if (text) {
+				$.post("/send_message", {
+					idosbb: @ViewBag.SelectedOSBB.Id,
+					user: '@ViewBag.User.LastName @ViewBag.User.FirstName',
+					message: text
+				}).done(function () {
+					//document.getElementById('#txtMessage').value='';
+					//display the message immediately on the view of the sender
+					$('#txtMessage').val('');
+					console.log($("Kek - #txtMessage").val());
+				});
+				@*//обращаемся к методу Index и передаем параметр "chatMessage"
+				var href = '/Char?id=@ViewBag.SelectedOSBB.Id&user=' + '@ViewBag.User.LastName%40'+ '@ViewBag.User.FirstName';
+				console.log(href);
+				href = href + "&chatMessage=" + encodeURIComponent(text);
+				$("#ActionLink").attr("href", href).click();*@
+			}
+		});
+
+		function ChatOnSuccess(result) {
+			Scroll();
+			ShowLastRefresh();
+		}
+
+		// каждые пять секунд обновляем поле чата
+		function Refresh() {
+            if (@ViewBag.SelectedOSBB.Id != 0) {
+                var href = "/Main/Chat?id=@ViewBag.SelectedOSBB.Id&user=" + '@ViewBag.User.LastName%40'+ '@ViewBag.User.FirstName';
+			    console.log(href);
+			    $("#ActionLink").attr("href", href).click();
+
+			    $("#Messages").load('/Main/Chat?id=@ViewBag.SelectedOSBB.Id&user=' + '@ViewBag.User.LastName%40'+ '@ViewBag.User.FirstName');
+
+			    setTimeout("Refresh();", 2000);
+            }
+			
+		}
+
+		//скролл к низу окна
+		function Scroll() {
+			var win = $('#Messages');
+			var height = win[0].scrollHeight;
+			win.scrollTop(height);
+		}
+
+		//отображение времени последнего обновления чата
+		function ShowLastRefresh() {
+			var dt = new Date();
+			var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+			$("#LastRefresh").text("Последнее обновление было в " + time);
+	}
+
+</script>
+
+@*<script type="text/javascript">
+		let currentContact = null; // Holds current contact
+		let newMessageTpl =
+		`<div>
+			<div id="msg-{{id}}" class="row __chat__par__">
+			  <div class="__chat__">
+				<p>{{body}}</p>
+				<p class="delivery-status">Delivered</p>
+			  </div>
+			</div>
+		 </div>`;
+
+		let socketId = null;
+		let currentconversationChannel = null;
+		let conversationChannelName = null;
+
+		//Pusher client side setup
+		const pusher = new Pusher('e9bcc3a4af8977d151f5', {
+			cluster: 'eu'
+		});
+
+		pusher.connection.bind('connected', function () {
+			socketId = pusher.connection.socket_id;
+		});
+
+		// select contact to chat with
+		$('.user__item').click( function(e) {
+			e.preventDefault();
+			currentContact = {
+				id: $(this).data('contact-id'),
+				name: $(this).data('contact-name'),
+			};
+
+			if ( conversationChannelName ) {
+				pusher.unsubscribe( conversationChannelName );
+			}
+
+			conversationChannelName = getConvoChannel(
+										  (@ViewBag.User.Id * 1) ,
+										  (currentContact.id * 1)
+									  );
+
+			currentconversationChannel = pusher.subscribe(conversationChannelName);
+
+			bind_client_events();
+
+			$('#contacts').find('li').removeClass('active');
+
+			$('#contacts .contact-' + currentContact.id).find('li').addClass('active');
+			getChat(currentContact.id);
+		});
+
+		// get chat data
+		function getChat(contact_id) {
+			$.getJSON('/Main/ConversationWithContact', { contact: contact_id })
+				.done(function (resp) {
+					console.log(resp.data);
+				var chat_data = resp.data || [];
+				loadChat( chat_data );
+				});
+
+		}
+
+		//load chat data into view
+		function loadChat( chat_data ) {
+			chat_data.forEach( function(data) {
+				displayMessage(data);
+			});
+
+			$('.chat__body').show();
+			$('.__no__chat__').hide();
+		}
+
+		function displayMessage( message_obj ) {
+			const msg_id = message_obj.Id;
+			const msg_body = message_obj.Message;
+
+			let template = $(newMessageTpl).html();
+
+			template = template.replace("{{id}}", msg_id);
+			template = template.replace("{{body}}", msg_body);
+
+			template = $(template);
+
+			if ( message_obj.sender_id == @ViewBag.User.Id ) {
+				template.find('.__chat__').addClass('from__chat');
+			} else {
+				template.find('.__chat__').addClass('receive__chat');
+			}
+
+			if ( message_obj.status == 1 ) {
+				template.find('.delivery-status').show();
+			}
+
+			$('.chat__main').append(template);
+		}
+
+
+		function getConvoChannel(user_id, contact_id) {
+			if (user_id > contact_id) {
+				return 'private-chat-' + contact_id + '-' + user_id;
+			}
+
+			return 'private-chat-' + user_id + '-' + contact_id;
+		}
+
+		function bind_client_events() {
+			currentconversationChannel.bind("client-is-typing", function(data) {
+				if ( data.user_id == currentContact.id &&
+					 data.contact_id == @ViewBag.User.Id  ) {
+
+					$('#typerDisplay').text( currentContact.name + ' is typing...');
+
+					$('.chat__typing').fadeIn(100, function() {
+						$('.chat__type__body').addClass('typing_display__open');
+					}).delay(1000).fadeOut(300, function(){
+						$('.chat__type__body').removeClass('typing_display__open');
+					});
+				}
+			});
+
+			currentconversationChannel.bind("new_message", function (msg) {
+				if ( msg.receiver_id == @ViewBag.User.Id ) {
+						displayMessage(msg);
+					}
+			});
+
+			currentconversationChannel.bind("message_delivered", function (msg) {
+				$('#msg-' + msg.id).find('.delivery-status').show();
+			});
+
+		}
+		$('#sendMessage').click(function () {
+			console.log($('#msg_box').val());
+			debugger;
+			$.post("/send_message", {
+				message: $('#msg_box').val(),
+				contact: currentContact.id,
+				socket_id: socketId,
+			}).done( function (data) {
+				//display the message immediately on the view of the sender
+				displayMessage(data);
+				$('#msg_box').val('');
+			});
+		});
+
+
+	</script>*@

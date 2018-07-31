@@ -1,0 +1,11 @@
+CREATE TABLE [dbo].[AddTempOSBBs]
+(
+	[Id] INT NOT NULL PRIMARY KEY, 
+    [IdUser] INT NULL, 
+    [FirstName] NVARCHAR(MAX) NULL, 
+    [LastName] NVARCHAR(MAX) NULL, 
+    [MiddleName] NVARCHAR(MAX) NULL, 
+    [IdOSBB] INT NULL, 
+    [OSBBName] NVARCHAR(50) NULL, 
+    [ApartmentNumber] INT NULL
+)

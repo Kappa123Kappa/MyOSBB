@@ -1,0 +1,536 @@
+﻿@model List<MyOSBB.Models.OSBB>
+@{
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+    ViewBag.Title = "Ідеї";
+}
+
+<div class="wrapper">
+    <div class="sidebar" data-background-color="white" data-active-color="danger">
+        <div class="sidebar-wrapper">
+            <div class="logo">
+                <a href="http://www.creative-tim.com" class="simple-text">
+                    Моє ОСББ
+                </a>
+            </div>
+
+            <ul class="nav">
+                @foreach (var item in ViewBag.PageItemsList)
+                {
+                    if (item.Action == "MyOSBBSettings" && ViewBag.User.Id == ViewBag.SelectedOSBB.IdHead)
+                    {
+                        <li class="@item.Active">
+                            <a href='@Url.Action(item.Action, "Main", new  { id = ViewBag.SelectedOSBB.Id })'>
+                                <i class="@item.IClass"></i>
+                                <p>@item.MenuItem</p>
+                            </a>
+                        </li>
+                    }
+                    if (item.Action == "MyOSBBSettings" && ViewBag.User.Id != ViewBag.SelectedOSBB.IdHead)
+                    {
+                        continue;
+                    }
+                    if (item.Action != "MyOSBBSettings")
+                    {
+                        <li class="@item.Active">
+                            <a href='@Url.Action(item.Action, "Main", new  { id = ViewBag.SelectedOSBB.Id })'>
+                                <i class="@item.IClass"></i>
+                                <p>@item.MenuItem</p>
+                            </a>
+                        </li>
+                    }
+
+                }
+                @*<li class="active">
+                        <a href='@Url.Action("Main", "Main")'>
+                            <i class="ti-agenda"></i>
+                            <p>Головна</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href='@Url.Action("Profile", "Main")'>
+                            <i class="ti-user"></i>
+                            <p>Профіль</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="table.html">
+                            <i class="ti-view-list-alt"></i>
+                            <p>Table List</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="typography.html">
+                            <i class="ti-text"></i>
+                            <p>Typography</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="icons.html">
+                            <i class="ti-pencil-alt2"></i>
+                            <p>Icons</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="maps.html">
+                            <i class="ti-map"></i>
+                            <p>Maps</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="notifications.html">
+                            <i class="ti-bell"></i>
+                            <p>Notifications</p>
+                        </a>
+                    </li>*@
+                @*<li class="active-pro">
+                        <a href="upgrade.html">
+                            <i class="ti-export"></i>
+                            <p>Upgrade to PRO</p>
+                        </a>
+                    </li>*@
+            </ul>
+        </div>
+    </div>
+
+    <div class="main-panel">
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar bar1"></span>
+                        <span class="icon-bar bar2"></span>
+                        <span class="icon-bar bar3"></span>
+                    </button>
+                    <a class="navbar-brand" href='@Url.Action("Ideas", "Main")'>Ідеї</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <div class="dropdown" style="top: 3px;">
+                                @if (Model.Count == 0)
+                                {
+                                    <a href="#" class="btn dropdown-toggle-danger btn-primary btn-danger disabled" data-toggle="dropdown" style="border-radius: 5px;">
+                                        Відсутні ОСББ
+                                        <b class="caret"></b>
+                                    </a>
+                                }
+                                @if (Model.Count != 0)
+                                {
+                                    <a href="#" class="btn dropdown-toggle-success btn-primary btn-success" data-toggle="dropdown" style="border-radius: 5px;">
+                                        @ViewBag.SelectedOSBB.Name
+                                        <b class="caret"></b>
+                                    </a>
+                                    <ul id="osbbList" class="dropdown-menu" style="position: absolute; display:  block; right: 48px; top: 46px;">
+                                        @foreach (var item in @Model)
+                                        {
+                                            <li><a href='@Url.Action("Ideas", "Main", new { id = item.Id })'>@item.Name</a></li>
+                                        }
+                                    </ul>
+                                }
+                                <button class="btn btn-success" style="margin: 15px 3px; font-size: 14px; padding: 7px 6px; border-radius: 7px;"
+                                        onclick="location.href='@Url.Action("MyOSBBAdd", "Main")'">
+                                    <span class="ti-plus"></span>
+                                </button>
+
+                            </div>
+                        </li>
+                        <li>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="ti-panel"></i>
+                                <p>Статистика</p>
+                            </a>
+                        </li>
+                        @*<li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <i class="ti-bell"></i>
+                                    <p class="notification">5</p>
+                                    <p>Новини</p>
+                                    <b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">Notification 1</a></li>
+                                    <li><a href="#">Notification 2</a></li>
+                                    <li><a href="#">Notification 3</a></li>
+                                    <li><a href="#">Notification 4</a></li>
+                                    <li><a href="#">Another notification</a></li>
+                                </ul>
+                            </li>*@
+                        <li>
+                            <p class="loginAS"><span style="color: #9A9A9A">Ви увішли як </span><span style="color: #f5593d">@ViewBag.User.Login</span></p>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("LogOff")">
+                                <i class="ti-lock"></i>
+                                <p>Вийти</p>
+                            </a>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </nav>
+        <div class="content">
+            <div class="container-fluid">
+                @if (ViewBag.User.Id == ViewBag.SelectedOSBB.IdHead)
+                {
+                    <div class="row" style="margin-bottom: 15px;">
+                        <div class="col-md-12">
+                            <div class="card border-dark mb-3" style="border-color: #343a40!important;margin-bottom: 1rem!important;">
+                                <div class="card-header" style="text-align: center; font-family: 'Comfortaa', cursive; font-size: 20pt; text-decoration: underline;
+                                border-radius: calc(.25rem - 1px) calc(.25rem - 1px) 0 0; padding: .75rem 1.25rem; margin-bottom: 0; background-color: #7AC29A; color: #ffffff;
+                                border-bottom: 1px solid rgba(0,0,0,.125); padding: 12px 20px 12px 20px; border-radius: 6px 6px 0px 0px;">
+                                    Додати голосування
+                                </div>
+                                <div class="card-body text-dark" style="color: #343a40!important; padding: 20px;">
+                                    <div class="card-text">
+                                        <button class="btn btn-success" onclick="location.href='@Url.Action("IdeaAdd", "Main",
+                                                                                               new { selectedOSBBIdInDropDown = @ViewBag.SelectedOSBB.Id })'"
+                                                style="position: relative; top: 10px; width: 210px; display: block; margin: auto; font-size: 14px;">
+                                            <span class="ti-plus"></span>
+                                        </button>
+                                    </div>
+                                    <div class="content">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @*<div class="col-md-12">
+
+                                                <div class="card" style="padding-top: 10px; border-radius: 6px; margin: auto; margin: auto;
+                                                box-shadow: 0 2px 2px rgba(204, 197, 185, 0.5); ">
+                                        <div class="header">
+                                            <h4 class="title" style="text-align: center;"></h4>
+                                            <button class="btn btn-success" onclick="location.href='@Url.Action("IdeaAdd", "Main",
+                                                                                                       new { selectedOSBBIdInDropDown = @ViewBag.SelectedOSBB.Id })'"
+                                                    style="position: relative; top: 10px; width: 210px; display: block; margin: auto; font-size: 14px;">
+                                                <span class="ti-plus"></span>
+                                            </button>
+                                        </div>
+                                        <div class="content">
+                                        </div>
+                                    </div>
+                            </div>*@
+                    </div>
+                }
+                <div class="row">
+                    <div class="col-lg-12" style="min-width: min-content;">
+                        <div class="card">
+                            <div class="header">
+                                <h4 class="title">Останні ідеї</h4>
+                                <p class="category">Ваше осбб</p>
+                            </div>
+                            <div class="content">
+                                <div class="content table-responsive table-full-width">
+                                    @if (ViewBag.IsAllRegistred == true)
+                                    {
+                                        if (Enumerable.Count(ViewBag.Ideas) > 0)
+                                        {
+                                            <table class="table table-striped">
+                                                <thead>
+                                                <th>№</th>
+                                                <th></th>
+                                                <th>Тема</th>
+                                                <th>Опис</th>
+                                                <th>Підписів</th>
+                                                <th>Ви проголосували</th>
+                                                <th></th>
+                                                <th></th>
+                                                </thead>
+                                                <tbody>
+
+                                                    @for (int i = 0; i < Enumerable.Count(ViewBag.Ideas); i++)
+                                                    {
+                                                        int count = i + 1;
+                                                        <tr>
+                                                            <td>@count</td>
+                                                            <td style="background-image: url(@ViewBag.Ideas[i].pathToPhoto); overflow:  hidden; width:  230px;
+                                                           background-repeat-x: no-repeat;  background-repeat-y: no-repeat; background-position: center;
+                                                                background-size: contain;"></td>
+                                                            <td style="width: 9%;">@ViewBag.Ideas[i].title</td>
+                                                            <td id="description" style="width: 15%; text-align: justify;">
+                                                                @Html.Raw(@ViewBag.Ideas[i].text.Replace("\r\n", "<br />"))
+                                                            </td>
+                                                            <td style="width: 15%;">
+                                                                <div class="progress">
+                                                                    <div class="progress-bar bg-info" style="width: calc(@ViewBag.Ideas[i].quantityOfVotes * 100% / @ViewBag.Voters)">
+                                                                        @ViewBag.Ideas[i].quantityOfVotes/@ViewBag.Voters
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+
+                                                            @if (ViewBag.Ideas[i].isVouted == true)
+                                                            {
+                                                                for (int j = 0; j < Enumerable.Count(ViewBag.UserVotes); j++)
+                                                                {
+                                                                    if (ViewBag.UserVotes[j].IdIdea == ViewBag.Ideas[i].id)
+                                                                    {
+                                                                        if (@ViewBag.UserVotes[j].UserVote == 1 && @ViewBag.UserVotes[j].IdUser == @ViewBag.User.Id)
+                                                                        {
+                                                                            <td> За </td>
+                                                                        }
+                                                                        else if (@ViewBag.UserVotes[j].UserVote == 0 && @ViewBag.UserVotes[j].IdUser == @ViewBag.User.Id)
+                                                                        {
+                                                                            <td> Проти </td>
+                                                                        }
+
+                                                                    }
+                                                                }
+                                                                <td style="padding-left: 0px; padding-bottom: 0px;">
+                                                                    <div class="card" style="max-width: 229px;">
+                                                                        <div class="content">
+                                                                            <canvas id="pie-@ViewBag.Ideas[i].id" width="400" height="400"></canvas>
+                                                                            <script type="text/javascript">
+                                                                                var ctx = document.getElementById("pie-@ViewBag.Ideas[i].id");
+                                                                                console.log(@ViewBag.Ideas[i].quantityOfY)
+                                                                                var myChart = new Chart(ctx, {
+                                                                                    type: 'doughnut',
+                                                                                        data: {
+                                                                                            labels: ["За", "Проти", "Не голосували"],
+                                                                                            datasets: [{
+                                                                                                label: '# of Votes',
+                                                                                                data: [ @ViewBag.Ideas[i].quantityOfY, @ViewBag.Ideas[i].quantityOfN, (@ViewBag.Voters - @ViewBag.Ideas[i].quantityOfY - @ViewBag.Ideas[i].quantityOfN)],
+                                                                                                backgroundColor: [
+                                                                                                    'rgba(104, 179, 200, 0.2)',
+                                                                                                    'rgba(245, 89, 61, 0.2)',
+                                                                                                    'rgba(255, 206, 86, 0.2)'
+                                                                                                ],
+                                                                                                borderColor: [
+                                                                                                    'rgba(104, 179, 200, 1)',
+                                                                                                    'rgba(245, 89, 61, 1)',
+                                                                                                    'rgba(255, 206, 86, 1)'
+                                                                                                ],
+                                                                                                borderWidth: 1
+                                                                                            }]
+                                                                                        },
+                                                                                        options: {
+                                                                                            scales: {
+                                                                                                yAxes: [{
+                                                                                                    ticks: {
+                                                                                                        display: false,
+                                                                                                        beginAtZero: true
+                                                                                                    },
+                                                                                                    gridLines: {
+                                                                                                        display: false,
+                                                                                                        drawBorder: false,
+                                                                                                    }
+                                                                                                }],
+
+                                                                                                xAxes: [{
+                                                                                                    ticks: {
+                                                                                                        display: false,
+                                                                                                        beginAtZero: true
+                                                                                                    },
+                                                                                                    gridLines: {
+                                                                                                        display: false,
+                                                                                                        drawBorder: false,
+                                                                                                    }
+
+                                                                                                }]
+                                                                                            }
+                                                                                        }
+                                                                                     });
+
+                                                                            </script>
+                                                                            @*<div id="chartPreferences" class="ct-chart ct-perfect-fourth">
+                                                                                    <svg xmlns:ct="http://gionkunz.github.com/chartist-js/ct" width="100%" height="100%"
+                                                                                         class="ct-chart-pie" style="width: 100%; height: 100%;">
+                                                                                        <g class="ct-series ct-series-c">
+                                                                                            <path d="M174.5,5A117.5,117.5,0,0,0,130.864,13.403L174.5,122.5Z" class="ct-slice-pie"
+                                                                                                  ct:value="@ViewBag.Ideas[i].quantityOfY"></path>
+                                                                                        </g>
+                                                                                        <g class="ct-series ct-series-b">
+                                                                                            <path d="M131.245,13.251A117.5,117.5,0,0,0,94.365,208.434L174.5,122.5Z" class="ct-slice-pie"
+                                                                                                  ct:value="@ViewBag.Ideas[i].quantityOfN">
+                                                                                            </path>
+                                                                                        </g>
+                                                                                        <g class="ct-series ct-series-a">
+                                                                                            <path d="M94.066,208.154A117.5,117.5,0,1,0,174.5,5L174.5,122.5Z" class="ct-slice-pie"
+                                                                                                  ct:value="@ViewBag.SelectedOSBB.quantityOfFlats - @ViewBag.Ideas[i].quantityOfY + @ViewBag.Ideas[i].quantityOfN">
+                                                                                            </path>
+                                                                                        </g>
+                                                                                        <g>
+                                                                                            <text dx="229.12436854593477" dy="144.12731747022482" text-anchor="middle"
+                                                                                                  class="ct-label">
+                                                                                                @ViewBag.Ideas[i].quantityOfY
+                                                                                            </text>
+                                                                                            <text dx="116.79062401968952" dy="111.49134776808874" text-anchor="middle" class="ct-label">
+                                                                                                @ViewBag.Ideas[i].quantityOfN
+                                                                                            </text>
+                                                                                            <text dx="163.49134776808862" dy="64.79062401968955" text-anchor="middle" class="ct-label">
+                                                                                                @ViewBag.SelectedOSBB.quantityOfFlats - @ViewBag.Ideas[i].quantityOfY + @ViewBag.Ideas[i].quantityOfN
+                                                                                            </text>
+                                                                                        </g>
+                                                                                    </svg>
+                                                                                </div>
+
+                                                                                <div class="footer">
+                                                                                    <div class="chart-legend">
+                                                                                        <i class="fa fa-circle text-info"></i> Так
+                                                                                        <i class="fa fa-circle text-danger"></i> Ні
+                                                                                        <i class="fa fa-circle text-warning"></i> Не голосували
+                                                                                    </div>
+                                                                                </div>*@
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <button id="vote" class="btn btn-info  btnInTable" style="margin-bottom: 5px;"
+                                                                            onclick="location.href='@Url.Action("Idea", "Main", new { selectedOSBBIdInDropDown = @ViewBag.SelectedOSBB.Id,
+                                                                                                   selectedIdea = @ViewBag.Ideas[i].id})'">
+                                                                        Детальніше
+                                                                    </button>
+
+                                                                </td>
+                                                                if (@ViewBag.Ideas[i].author == (@ViewBag.User.LastName + " " + @ViewBag.User.FirstName + " " + @ViewBag.User.MiddleName).ToString())
+                                                                {
+                                                                    <td>
+                                                                        <button id="vote" class="btn btn-danger  btnInTable" style="margin-bottom: 5px;"
+                                                                                onclick="location.href='@Url.Action("DeletetIdea", "Main", new { selectedOSBBIdInDropDown = @ViewBag.SelectedOSBB.Id,
+                                                                                                   selectedIdea = @ViewBag.Ideas[i].id})'">
+                                                                            Видалити
+                                                                        </button>
+                                                                    </td>
+                                                                }
+                                                            }
+
+                                                            else
+                                                            {
+                                                                <td>
+                                                                    Ви ще не проголосували
+                                                                </td>
+                                                                <td>
+                                                                    <button id="vote" class="btn btn-success btnInTable" style="margin-bottom: 5px; width: 65px;"
+                                                                            onclick="location.href='@Url.Action("Vote", "Main", new { selectedOSBBIdInDropDown = @ViewBag.SelectedOSBB.Id,
+                                                                                                   idIdea = @ViewBag.Ideas[i].id, vote = 1 })'">
+                                                                        Так
+                                                                    </button>
+
+                                                                    <button id="vote" class="btn btn-danger  btnInTable" style="margin-bottom: 5px; width: 65px;"
+                                                                            onclick="location.href='@Url.Action("Vote", "Main", new { selectedOSBBIdInDropDown = @ViewBag.SelectedOSBB.Id,
+                                                                                                   idIdea = @ViewBag.Ideas[i].id, vote = 0 })'">
+                                                                        Ні
+                                                                    </button>
+                                                                </td>
+                                                                <td></td>
+                                                                if (@ViewBag.Ideas[i].author == (@ViewBag.User.LastName + " " + @ViewBag.User.FirstName + " " + @ViewBag.User.MiddleName).ToString())
+                                                                {
+                                                                    <td>
+                                                                        <button id="vote" class="btn btn-danger  btnInTable" style="margin-bottom: 5px;"
+                                                                                onclick="location.href='@Url.Action("DeletetIdea", "Main", new { selectedOSBBIdInDropDown = @ViewBag.SelectedOSBB.Id,
+                                                                                                   selectedIdea = @ViewBag.Ideas[i].id})'">
+                                                                            Видалити
+                                                                        </button>
+                                                                    </td>
+                                                                }
+
+                                                            }
+
+                                                        </tr>
+                                                    }
+
+                                                </tbody>
+                                            </table>
+                                        }
+                                        else
+                                        {
+                                            <table class="table table-striped">
+                                                <tr>
+                                                    <td colspan="9" style="text-align: center; font-family: 'Comfortaa', cursive; font-size: 20pt; color: #f5593d">
+                                                        Ідеї відсутні
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        <table class="table table-striped">
+                                            <tr>
+                                                <td colspan="9" style="text-align: center; font-family: 'Comfortaa', cursive; font-size: 20pt; color: #f5593d">
+                                                    Ще не всі зареєструвались у вашому ОСББ. Подавати ідеї на голосування не можна, поки усі не зареєструються!!!
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+            <div class="container-fluid">
+                <nav class="pull-left">
+                    <ul>
+
+                        <li>
+                            <a href="https://vntu.edu.ua/">
+                                ВНТУ
+                            </a>
+                        </li>
+                        <li>
+                            <a href="http://fcsa.vntu.edu.ua/">
+                                ФКСА
+                            </a>
+                        </li>
+                        <li>
+                            <a href="http://www.creative-tim.com/license">
+                                Licenses
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                <div class="copyright pull-right">
+                    &copy;
+                    <script>document.write(new Date().getFullYear())</script>, зроблено з  <i class="fa fa-heart heart"></i> від Плисака Владислава
+                    <a href="https://www.facebook.com/profile.php?id=100011492971959"><i class="fa fa-facebook facebook"></i></a>
+                    <a href="https://plus.google.com/u/0/111604599843653094663"><i class="fa fa-google-plus google-plus" style="color: #EB5E28;"></i></a>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+
+@*<script>
+        var ctx = document.getElementById("pie");
+        $('[data-marker]').each(function () {
+            var markerData = $(this).data('marker');
+
+            addMarker(markerData.Ideas.quantityOfY, markerData.Ideas.quantityOfN);
+            console.log(markerData);
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ["Так", "Ні", "Не голосували"],
+                    datasets: [{
+                        label: '# of Votes',
+                        data: [markerData.quantityOfY, markerData.quantityOfN, @ViewBag.SelectedOSBB.quantityOfFlats - markerData.Ideas.quantityOfY + markerData.quantityOfN],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255,99,132,1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+        });
+
+    </script>*@

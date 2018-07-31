@@ -1,0 +1,394 @@
+﻿@model MyOSBB.Models.AddOSBBViewModel
+@{
+    ViewBag.Title = "Профіль";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+
+
+<!-- Modal -->     
+
+
+
+<div class="wrapper">
+    <div class="sidebar" data-background-color="white" data-active-color="danger">
+        <div class="sidebar-wrapper">
+            <div class="logo">
+                <a href="http://www.creative-tim.com" class="simple-text">
+                    Моє ОСББ
+                </a>
+            </div>
+
+            <ul class="nav">
+                @foreach (var item in ViewBag.PageItemsList)
+                {
+                    if (item.Action == "MyOSBBSettings" && ViewBag.User.Id == ViewBag.SelectedOSBB.IdHead)
+                    {
+                        <li class="@item.Active">
+                            <a href='@Url.Action(item.Action, "Main", new  { id = ViewBag.SelectedOSBB.Id })'>
+                                <i class="@item.IClass"></i>
+                                <p>@item.MenuItem</p>
+                            </a>
+                        </li>
+                    }
+                    if (item.Action == "MyOSBBSettings" && ViewBag.User.Id != ViewBag.SelectedOSBB.IdHead)
+                    {
+                        continue;
+                    }
+                    if (item.Action != "MyOSBBSettings")
+                    {
+                        <li class="@item.Active">
+                            <a href='@Url.Action(item.Action, "Main", new  { id = ViewBag.SelectedOSBB.Id })'>
+                                <i class="@item.IClass"></i>
+                                <p>@item.MenuItem</p>
+                            </a>
+                        </li>
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+
+    <div class="main-panel">
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar bar1"></span>
+                        <span class="icon-bar bar2"></span>
+                        <span class="icon-bar bar3"></span>
+                    </button>
+                    <a class="navbar-brand" href='@Url.Action("MyOSBB", "Main")'>Профіль</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <div class="dropdown" style="top: 3px;">
+                                @if (Model.OSBBList.Count == 0)
+                                {
+                                    <a href="#" class="btn dropdown-toggle-danger btn-primary btn-danger disabled" data-toggle="dropdown" style="border-radius: 5px;">
+                                        Відсутні ОСББ
+                                        <b class="caret"></b>
+                                    </a>
+                                }
+                                @if (Model.OSBBList.Count != 0)
+                                {
+                                    <a href="#" class="btn dropdown-toggle-success btn-primary btn-success" data-toggle="dropdown" style="border-radius: 5px;">
+                                        @Model.OSBBList[0].Name
+                                        <b class="caret"></b>
+                                    </a>
+                                    <ul class="dropdown-menu" style="position: absolute; display:  block; right: 48px; top: 46px;">
+                                        @foreach (var item in @Model.OSBBList)
+                                        {
+                                            <li><a href="#paper">@item.Name</a></li>
+                                        }
+                                    </ul>
+                                }
+                                <button class="btn btn-success" style="margin: 15px 3px; font-size: 14px; padding: 7px 6px; border-radius: 7px;"><span class="ti-plus"></span></button>
+
+                            </div>
+                        </li>
+                        <li>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="ti-panel"></i>
+                                <p>Статистика</p>
+                            </a>
+                        </li>
+                        @*<li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="ti-bell"></i>
+                                <p class="notification">5</p>
+                                <p>Новини</p>
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">Notification 1</a></li>
+                                <li><a href="#">Notification 2</a></li>
+                                <li><a href="#">Notification 3</a></li>
+                                <li><a href="#">Notification 4</a></li>
+                                <li><a href="#">Another notification</a></li>
+                            </ul>
+                        </li>*@
+                        <li>
+                            <p class="loginAS"><span style="color: #9A9A9A">Ви увішли як </span><span style="color: #f5593d">@ViewBag.User.Login</span></p>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("LogOff")">
+                                <i class="ti-lock"></i>
+                                <p>Вийти</p>
+                            </a>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </nav>
+        <div class="content" style="font-family: 'Comfortaa', cursive;">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12" @*style="width: 100%;"*@>
+                        <div class="card">
+                            <div class="content">
+                                @using (Html.BeginForm("AddToTempApartmentForAdding", "Main", FormMethod.Post, new { @class = "register-form", role = "form" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label>Область</label>
+                                                @Html.DropDownList("Область", ViewBag.Regions as SelectList, "Область", new { @class = "form-control", id = "regionList", @AppendDataBoundItems = "true" })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label>Район</label>
+                                                @Html.DropDownList("Район", new SelectList(new string[] { "" }), "Район", new { @class = "form-control", id = "districtList" })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label>Місто</label>
+                                                @Html.DropDownList("Місто", new SelectList(new string[] { "" }), "Місто", new { @class = "form-control", id = "citiesList" })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label>Назва ОСББ</label>
+                                                @Html.DropDownListFor(model => model.addTempOSBB.IdOSBB, new SelectList(new string[] { "" }), "Назва ОСББ", new { @class = "form-control", id = "osbbList" })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label>Номер квартири</label>
+                                                @Html.DropDownListFor(model => model.addTempOSBB.ApartmentNumber, new SelectList(new string[] { "" }), "Номер квартири", new { @class = "form-control", id = "apartamentList" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="alert alert-warning" style="background-color:#ffe28c66">
+                                            <span>
+                                                <b>УВАГА</b> Якщо ваше ОСББ відсутнє у списку, його потрібно зареєструвати.<br /> <span style="color:#000000"><b>Зареєструвати ОСББ повинен СТАРОСТА</b>.</span>
+                                                Якщо ви <b>СТАРОСТА</b> зателефонуйте за номером +380982348734
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="text-center">
+                                            <button id="submitButton"class="btn btn-info btn-fill btn-wd" data-toggle="modal" data-target="#exampleModal">Додати ОСББ</button>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+            <div class="container-fluid">
+                <nav class="pull-left">
+                    <ul>
+
+                        <li>
+                            <a href="https://vntu.edu.ua/">
+                                ВНТУ
+                            </a>
+                        </li>
+                        <li>
+                            <a href="http://fcsa.vntu.edu.ua/">
+                                ФКСА
+                            </a>
+                        </li>
+                        <li>
+                            <a href="http://www.creative-tim.com/license">
+                                Licenses
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                <div class="copyright pull-right">
+                    &copy;
+                    <script>document.write(new Date().getFullYear())</script>, зроблено з  <i class="fa fa-heart heart"></i> від Плисака Владислава
+                    <a href="https://www.facebook.com/profile.php?id=100011492971959"><i class="fa fa-facebook facebook"></i></a>
+                    <a href="https://plus.google.com/u/0/111604599843653094663"><i class="fa fa-google-plus google-plus" style="color: #EB5E28;"></i></a>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+
+<script type="text/javascript">
+    //document.getElementById("districtList").disabled = true;
+    //document.getElementById("citiesList").disabled = true;
+    //document.getElementById("osbbList").disabled = true;
+    //document.getElementById("apartamentList").disabled = true;
+    //document.getElementById("toggleButton").disabled = true;
+    //document.getElementById("submitButton").disabled = true;
+
+    window.onload = function () {
+        $("#districtList").html('<option>Район</option>');
+        $("#citiesList").html('<option>Місто</option>');
+        $("#osbbList").html('<option>ОСББ</option>');
+        $("#apartamentList").html('<option>Доступні квартири</option>"');
+        var valueD = $('#districtList').val();
+        var valueC = $('#citiesList').val();
+        var valueO = $('#osbbList').val();
+        var valueA = $('#apartamentList').val();
+        document.getElementById("submitButton").disabled = true;
+        console.log("Kappa");
+        if (valueD != "") {
+            document.getElementById("districtList").disabled = true;
+            document.getElementById("submitButton").disabled = true;
+           
+        }
+        if (valueC != "") {
+            document.getElementById("citiesList").disabled = true;
+            document.getElementById("submitButton").disabled = true;
+        }
+        if (valueO != "") {
+            document.getElementById("osbbList").disabled = true;
+            document.getElementById("submitButton").disabled = true;
+        }
+        if (valueA != "") {
+            document.getElementById("apartamentList").disabled = true;
+            document.getElementById("submitButton").disabled = true;
+        }
+      
+        
+    }
+
+    $("#regionList").change(function () {
+
+        var value = $('#regionList').val();
+        if (value != "") {
+            document.getElementById("districtList").disabled = false;
+            document.getElementById("citiesList").disabled = true;
+            document.getElementById("osbbList").disabled = true;
+            document.getElementById("apartamentList").disabled = true;
+            document.getElementById("submitButton").disabled = true;
+
+            $("#citiesList").html('<option>Місто</option>');
+            $("#osbbList").html('<option>ОСББ</option>');
+            $("#apartamentList").html('<option>Доступні квартири</option>"');
+        }
+        else {
+            document.getElementById("districtList").disabled = true;
+            document.getElementById("citiesList").disabled = true;
+            document.getElementById("osbbList").disabled = true;
+            document.getElementById("apartamentList").disabled = true;
+            document.getElementById("submitButton").disabled = true;
+            $("#districtList").html('<option>Район</option>');
+            $("#citiesList").html('<option>Місто</option>');
+            $("#osbbList").html('<option>ОСББ</option>');
+            $("#apartamentList").html('<option>Доступні квартири</option>"');
+        }
+        $.getJSON('/Main/getDistricts', { regionId: $('#regionList').val() }, function (data) {
+            var items = '<option>Район</option>'
+            $.each(data, function (i, Service) {
+
+                items += "<option value='" + Service.Value + "'>" + Service.Text +
+                    "</option>";
+            });
+            $("#districtList").html(items);
+        });
+    });
+
+    $("#districtList").change(function () {
+
+        var value = $('#districtList').val();
+        if (value != "Район") {
+            document.getElementById("citiesList").disabled = false;
+            document.getElementById("osbbList").disabled = true;
+            document.getElementById("apartamentList").disabled = true;
+            document.getElementById("submitButton").disabled = true;
+
+
+            $("#osbbList").html('<option>ОСББ</option>');
+            $("#apartamentList").html('<option>Доступні квартири</option>"');
+        }
+        else {
+            document.getElementById("citiesList").disabled = true;
+            document.getElementById("osbbList").disabled = true;
+            document.getElementById("apartamentList").disabled = true;
+            document.getElementById("submitButton").disabled = true;
+            $("#citiesList").html('<option>Місто</option>');
+            $("#osbbList").html('<option>ОСББ</option>');
+            $("#apartamentList").html('<option>Доступні квартири</option>"');
+        }
+        $.getJSON('/Main/getCities', { districtsId: $('#districtList').val() }, function (data) {
+            var items = '<option>Місто</option>'
+            $.each(data, function (i, Service) {
+
+                items += "<option value='" + Service.Value + "'>" + Service.Text +
+                    "</option>";
+            });
+            $("#citiesList").html(items);
+        });
+    });
+
+    $("#citiesList").change(function () {
+        var value = $('#citiesList').val();
+        if (value != "Місто") {
+            document.getElementById("osbbList").disabled = false;
+            document.getElementById("apartamentList").disabled = true;
+            document.getElementById("submitButton").disabled = true;
+
+            $("#apartamentList").html('<option>Доступні квартири</option>"');
+        }
+        else {
+            document.getElementById("osbbList").disabled = true;
+            document.getElementById("apartamentList").disabled = true;
+            document.getElementById("submitButton").disabled = true;
+            $("#osbbList").html('<option>ОСББ</option>');
+            $("#apartamentList").html('<option>Доступні квартири</option>"');
+        }
+        $.getJSON('/Main/getOSBBS', { regionId: $('#regionList').val(), districtsId: $('#districtList').val(), citiesId: $('#citiesList').val() }, function (data) {
+            var items = '<option>ОСББ</option>'
+            $.each(data, function (i, Service) {
+
+                items += "<option value='" + Service.Value + "'>" + Service.Text +
+                    "</option>";
+            });
+            $("#osbbList").html(items);
+        });
+    });
+
+    $("#osbbList").change(function () {
+        var value = $('#osbbList').val();
+        if (value != "ОСББ") {
+            document.getElementById("apartamentList").disabled = false;
+            document.getElementById("submitButton").disabled = true;
+        }
+        else {
+            document.getElementById("apartamentList").disabled = true;
+            document.getElementById("submitButton").disabled = true;;
+            $("#apartamentList").html('<option>Доступні квартири</option>"');
+        }
+        $.getJSON('/Main/getUserOSBBApartments', { osbbId: value }, function (data) {
+            var items = '<option>Доступні квартири</option>'
+            $.each(data, function (i, Service) {
+
+                items += "<option value='" + Service.Value + "'>" + Service.Text +
+                    "</option>";
+            });
+            $("#apartamentList").html(items);
+        });
+    });
+
+    $("#apartamentList").change(function () {
+        var value = $('#osbbList').val();
+        if (value != "") {
+            document.getElementById("submitButton").disabled = false;
+        }
+        else {
+            document.getElementById("submitButton").disabled = true;
+        }
+    });
+
+</script>
+

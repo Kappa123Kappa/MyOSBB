@@ -1,0 +1,337 @@
+﻿@model List<MyOSBB.Models.OSBB>
+@{
+	ViewBag.Title = "ОСББ";
+	Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+
+@*<!-- Modal -->     data-toggle="modal" data-target="#exampleModal"
+
+	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document" style="position:  initial;">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					...
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary">Save changes</button>
+				</div>
+			</div>
+		</div>
+	</div>*@
+
+<div class="wrapper">
+	<div class="sidebar" data-background-color="white" data-active-color="danger">
+		<div class="sidebar-wrapper">
+			<div class="logo">
+				<a href="http://www.creative-tim.com" class="simple-text">
+					Моє ОСББ
+				</a>
+			</div>
+
+			<ul class="nav">
+				@foreach (var item in ViewBag.PageItemsList)
+				{
+					if (item.Action == "MyOSBBSettings" && ViewBag.User.Id == ViewBag.SelectedOSBB.IdHead)
+					{
+						<li class="@item.Active">
+							<a href='@Url.Action(item.Action, "Main", new  { id = ViewBag.SelectedOSBB.Id })'>
+								<i class="@item.IClass"></i>
+								<p>@item.MenuItem</p>
+							</a>
+						</li>
+					}
+					if (item.Action == "MyOSBBSettings" && ViewBag.User.Id != ViewBag.SelectedOSBB.IdHead)
+					{
+						continue;
+					}
+					if (item.Action != "MyOSBBSettings")
+					{
+						<li class="@item.Active">
+							<a href='@Url.Action(item.Action, "Main", new  { id = ViewBag.SelectedOSBB.Id })'>
+								<i class="@item.IClass"></i>
+								<p>@item.MenuItem</p>
+							</a>
+						</li>
+					}
+				}
+			</ul>
+		</div>
+	</div>
+
+	<div class="main-panel">
+		<nav class="navbar navbar-default">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar bar1"></span>
+						<span class="icon-bar bar2"></span>
+						<span class="icon-bar bar3"></span>
+					</button>
+					<a class="navbar-brand" href='@Url.Action("MyOSBB", "Main")'>ОСББ</a>
+				</div>
+				<div class="collapse navbar-collapse">
+					<ul class="nav navbar-nav navbar-right">
+						<li>
+							<div class="dropdown" style="top: 3px;">
+								@if (Model.Count == 0)
+								{
+									<a href="#" class="btn dropdown-toggle-danger btn-primary btn-danger disabled" data-toggle="dropdown" style="border-radius: 5px;">
+										Відсутні ОСББ
+										<b class="caret"></b>
+									</a>
+								}
+								@if (Model.Count != 0)
+								{
+									<a href="#" class="btn dropdown-toggle-success btn-primary btn-success" data-toggle="dropdown" style="border-radius: 5px;">
+										@ViewBag.SelectedOSBB.Name
+										<b class="caret"></b>
+									</a>
+									<ul class="dropdown-menu" style="position: absolute; display:  block; right: 48px; top: 46px;">
+										@foreach (var item in @Model)
+										{
+											<li><a href='@Url.Action("MyOSBB", "Main", new  { id = item.Id })'>@item.Name</a></li>
+										}
+									</ul>
+								}
+								<button class="btn btn-success" style="margin: 15px 3px; font-size: 14px; padding: 7px 6px; border-radius: 7px;"><span class="ti-plus"></span></button>
+
+							</div>
+						</li>
+						<li>
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								<i class="ti-panel"></i>
+								<p>Статистика</p>
+							</a>
+						</li>
+						@*<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								<i class="ti-bell"></i>
+								<p class="notification">5</p>
+								<p>Новини</p>
+								<b class="caret"></b>
+							</a>
+							<ul class="dropdown-menu">
+								<li><a href="#">Notification 1</a></li>
+								<li><a href="#">Notification 2</a></li>
+								<li><a href="#">Notification 3</a></li>
+								<li><a href="#">Notification 4</a></li>
+								<li><a href="#">Another notification</a></li>
+							</ul>
+						</li>*@
+						<li>
+							<p class="loginAS"><span style="color: #9A9A9A">Ви увішли як </span><span style="color: #f5593d">@ViewBag.User.Login</span></p>
+						</li>
+						<li>
+							<a href="@Url.Action("LogOff")">
+								<i class="ti-lock"></i>
+								<p>Вийти</p>
+							</a>
+						</li>
+					</ul>
+
+				</div>
+			</div>
+		</nav>
+		<div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12" @*style="width: 100%;"*@>
+                        <div class="card">
+                            <div class="header">
+                                <h4 class="title">@ViewBag.SelectedOSBB.Name</h4>
+                                <p class="category">Оплата комунальних послуг</p>
+                            </div>
+                            <div class="content" style="font-family: 'Comfortaa', cursive;">
+                                <div class="content table-responsive table-full-width">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td>Рахунок</td>
+                                                <td>Сума</td>
+                                                <td></td>
+                                            </tr>
+
+                                        </thead>
+                                        <tbody style="text-align:  center;">
+                                            @foreach (var service in @ViewBag.PayModel)
+                                            {
+                                                if (service.TypeServicesName == "Газ")
+                                                {
+                                                    <tr class="table-Danger" style="background-color: #f5c6cb;">
+                                                        <td><i class="fa fa-fire" style="font-size:60px;color:#f5593d;"></i></td>
+                                                        <td>@service.TypeServicesName</td>
+                                                        <td>@service.AccountNumber</td>
+                                                        <td>5</td>
+                                                        <td>
+                                                            @Html.Raw(service.PayButton)
+                                                        </td>
+                                                    </tr>
+                                                }
+                                                else if (service.TypeServicesName == "Вода")
+                                                {
+                                                    <tr class="table-Info" style="background-color: #bee5eb;">
+                                                        <td><i class="fa fa-tint" style="font-size:60px;color:#68B3C8;"></i></td>
+                                                        <td>@service.TypeServicesName</td>
+                                                        <td>@service.AccountNumber</td>
+                                                        <td>5</td>
+                                                        <td>
+                                                            @Html.Raw(service.PayButton)
+                                                        </td>
+                                                    </tr>
+                                                }
+                                                else if (service.TypeServicesName == "Електроенергія")
+                                                {
+                                                    <tr class="table-Warning" style="background-color: #ffeeba;">
+                                                        <td><i class="fa fa-bolt" style="font-size:60px;color:#F3BB45;"></i></td>
+                                                        <td>@service.TypeServicesName</td>
+                                                        <td>@service.AccountNumber</td>
+                                                        <td>5</td>
+                                                        <td>
+                                                            @Html.Raw(service.PayButton)
+                                                        </td>
+                                                    </tr>
+                                                }
+                                                else
+                                                {
+                                                    <tr>
+                                                        <td><i class="fa fa-credit-card" style="font-size:60px;color:#a5a4a3;"></i></td>
+                                                        <td>@service.TypeServicesName</td>
+                                                        <td>@service.AccountNumber</td>
+                                                        <td>5</td>
+                                                        <td>
+                                                            @Html.Raw(service.PayButton)
+                                                        </td>
+                                                    </tr>
+                                                }
+
+                                            }
+
+                                            @*@foreach (var service in @ViewBag.UserAccountServices)
+                                    {
+                                        <tr>
+                                            @foreach (var type in @ViewBag.AccountTypeServices)
+                                            {
+                                                if (service.IdTypeServices == type.Id)
+                                                {
+                                                    <td>type.Name</td>
+                                                }
+                                            }
+
+                                            }
+                                            <td>service.AccountNumber</td>
+                                            <td></td>
+                                            <td>@(new HtmlString(ViewData["pay"].ToString()))</td>
+                                        </tr>
+
+                                    }*@
+                                        </tbody>
+                                    </table>
+
+
+                                    @*@ViewBag.AccountTypeServices
+                            if (@ViewBag.UserAccountServices[j].ApartmentNumber == @ViewBag.UserOSBBApartments[i].ApartmentNumber
+                            && @ViewBag.UserAccountServices[j].IdTypeServices == 3)
+                            {
+                            <td>@ViewBag.UserAccountServices[j].AccountNumber</td>
+                            }
+                            if (@ViewBag.UserAccountServices[j].ApartmentNumber == @ViewBag.UserOSBBApartments[i].ApartmentNumber
+                            && @ViewBag.UserAccountServices[j].IdTypeServices == 2)
+                            {
+                            <td>@ViewBag.UserAccountServices[j].AccountNumber</td>
+                            }
+                            if (@ViewBag.UserAccountServices[j].ApartmentNumber == @ViewBag.UserOSBBApartments[i].ApartmentNumber
+                            && @ViewBag.UserAccountServices[j].IdTypeServices == 1)
+                            {
+                            <td>@ViewBag.UserAccountServices[j].AccountNumber</td>
+                            }*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12" @*style="width: 100%;"*@>
+                        <div class="card">
+                            <div class="header">
+                                <h4 class="title">@ViewBag.SelectedOSBB.Name</h4>
+                                <p class="category">Оплата додаткових послуг</p>
+                            </div>
+                            <div class="content" style="font-family: 'Comfortaa', cursive;">
+                                <div class="content table-responsive table-full-width">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td>Рахунок</td>
+                                                <td>Сума</td>
+                                                <td></td>
+                                            </tr>
+
+                                        </thead>
+                                        <tbody style="text-align:  center;">
+                                            @foreach (var service in @ViewBag.PayModel2)
+                                            {
+                                                <tr>
+                                                        <td><i class="fa fa-credit-card" style="font-size:60px;color:#a5a4a3;"></i></td>
+                                                        <td>@service.TypeServicesName</td>
+                                                        <td>@service.AccountNumber</td>
+                                                        <td>5</td>
+                                                        <td>
+                                                            @Html.Raw(service.PayButton)
+                                                        </td>
+                                                    </tr>
+
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+		</div>
+		<footer class="footer">
+			<div class="container-fluid">
+				<nav class="pull-left">
+					<ul>
+
+						<li>
+							<a href="https://vntu.edu.ua/">
+								ВНТУ
+							</a>
+						</li>
+						<li>
+							<a href="http://fcsa.vntu.edu.ua/">
+								ФКСА
+							</a>
+						</li>
+						<li>
+							<a href="http://www.creative-tim.com/license">
+								Licenses
+							</a>
+						</li>
+					</ul>
+				</nav>
+				<div class="copyright pull-right">
+					&copy;
+					<script>document.write(new Date().getFullYear())</script>, зроблено з  <i class="fa fa-heart heart"></i> від Плисака Владислава
+					<a href="https://www.facebook.com/profile.php?id=100011492971959"><i class="fa fa-facebook facebook"></i></a>
+					<a href="https://plus.google.com/u/0/111604599843653094663"><i class="fa fa-google-plus google-plus" style="color: #EB5E28;"></i></a>
+				</div>
+			</div>
+		</footer>
+	</div>
+</div>
